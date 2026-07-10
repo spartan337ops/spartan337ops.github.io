@@ -1,0 +1,1656 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Fast, fixed-scope spreadsheet cleanup, website QA, document extraction, and small automation from SPARTAN Ops."
+    >
+    <meta name="theme-color" content="#09131f">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SPARTAN Ops | Fixed-scope computer and data services">
+    <meta
+      property="og:description"
+      content="Small computer and data jobs, handled professionally with clear scope, deliverables, and approval."
+    >
+<meta property="og:url" content="https://spartan337ops.github.io/">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>SPARTAN Ops | Fixed-scope computer and data services</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%3Cpath%20d%3D%22M11%204H53L60%2011V53L53%2060H11L4%2053V11L11%204Z%22%20fill%3D%22%2309131F%22%20stroke%3D%22%2337B9FF%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M43%2019H25C20.6%2019%2018%2021.7%2018%2025.4C18%2029.1%2020.5%2031.1%2024.6%2032L38.5%2035C41%2035.5%2042.5%2036.7%2042.5%2038.8C42.5%2041.2%2040.7%2042.7%2037.6%2042.7H19%22%20stroke%3D%22%2337B9FF%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22square%22%2F%3E%0A%3C%2Fsvg%3E%0A" type="image/svg+xml">
+    <style>
+:root {
+  --ink: #09131f;
+  --ink-soft: #111f2e;
+  --ink-raised: #16283a;
+  --paper: #f4f1e9;
+  --paper-bright: #fbfaf6;
+  --line: #cfd2cf;
+  --muted: #64707b;
+  --blue: #37b9ff;
+  --blue-deep: #0879bb;
+  --amber: #f4b942;
+  --white: #ffffff;
+  --radius: 4px;
+  --shell: min(1180px, calc(100% - 40px));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shell {
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+.site-header {
+  position: sticky;
+  z-index: 40;
+  top: 0;
+  color: var(--white);
+  background: rgba(9, 19, 31, 0.94);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(16px);
+}
+
+.header-inner {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  letter-spacing: 0.08em;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 17px;
+  font-weight: 900;
+  clip-path: polygon(10% 0, 90% 0, 100% 18%, 100% 82%, 90% 100%, 10% 100%, 0 82%, 0 18%);
+}
+
+.brand > span:last-child {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.brand strong {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.brand small {
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+nav a {
+  color: #aebbc8;
+  font-size: 13px;
+  font-weight: 650;
+  transition: color 160ms ease;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: var(--white);
+}
+
+.button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 800;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:focus-visible,
+nav a:focus-visible,
+.brand:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 3px;
+}
+
+.button-solid {
+  color: var(--ink);
+  background: var(--blue);
+  box-shadow: 0 10px 28px rgba(55, 185, 255, 0.18);
+}
+
+.button-solid:hover {
+  background: #6fceff;
+}
+
+.button-ghost {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.button-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.button-small {
+  min-height: 40px;
+  padding-inline: 17px;
+  font-size: 12px;
+}
+
+.button-large {
+  min-height: 58px;
+  padding-inline: 30px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 82% 16%, rgba(55, 185, 255, 0.13), transparent 28%),
+    linear-gradient(135deg, #09131f 0%, #0a1724 58%, #102438 100%);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 460px;
+  height: 460px;
+  right: -250px;
+  bottom: 2%;
+  border: 1px solid rgba(55, 185, 255, 0.18);
+  transform: rotate(45deg);
+}
+
+.hero-grid,
+.cta-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 84%);
+}
+
+.hero-layout {
+  position: relative;
+  z-index: 1;
+  min-height: 650px;
+  display: grid;
+  grid-template-columns: 1.03fr 0.97fr;
+  align-items: center;
+  gap: 72px;
+  padding: 84px 0 74px;
+}
+
+.eyebrow,
+.kicker,
+.console-label {
+  margin: 0 0 22px;
+  color: var(--blue-deep);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #adc3d5;
+}
+
+.signal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 5px rgba(55, 185, 255, 0.13);
+}
+
+.hero h1 {
+  max-width: 700px;
+  margin: 0;
+  font-size: clamp(48px, 5.5vw, 78px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.hero h1 span {
+  display: block;
+  color: var(--blue);
+}
+
+.hero-lede {
+  max-width: 655px;
+  margin: 30px 0 0;
+  color: #bdc9d4;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+.microcopy {
+  max-width: 590px;
+  margin: 20px 0 0;
+  color: #7f94a7;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.scope-console {
+  position: relative;
+  border: 1px solid rgba(148, 179, 204, 0.26);
+  background: rgba(8, 19, 31, 0.76);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.scope-console::before {
+  content: "";
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  top: -1px;
+  right: -1px;
+  border-top: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+}
+
+.console-topline,
+.console-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 20px;
+  color: #7f94a7;
+  border-bottom: 1px solid rgba(148, 179, 204, 0.16);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.console-status {
+  color: #b9e7ff;
+}
+
+.console-status i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.console-body {
+  padding: 32px;
+}
+
+.console-label {
+  margin-bottom: 12px;
+  color: var(--blue);
+}
+
+.console-body h2 {
+  max-width: 410px;
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.scope-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 34px 0;
+}
+
+.scope-flow div {
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px;
+  border: 1px solid rgba(148, 179, 204, 0.18);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.scope-flow span,
+.console-rules span {
+  color: #71889b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.scope-flow strong {
+  margin-top: 8px;
+  color: #dce8f1;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.scope-flow b {
+  color: var(--blue);
+}
+
+.console-rules {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid rgba(148, 179, 204, 0.16);
+}
+
+.console-rules p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(148, 179, 204, 0.12);
+}
+
+.console-rules strong {
+  color: #c9d4de;
+  font-size: 11px;
+}
+
+.console-footer {
+  border-top: 1px solid rgba(148, 179, 204, 0.16);
+  border-bottom: 0;
+}
+
+.trust-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.trust-strip span {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #aebcca;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.trust-strip span:last-child {
+  border-right: 0;
+  justify-content: flex-end;
+}
+
+.trust-strip i {
+  color: var(--blue);
+  font-style: normal;
+}
+
+.section {
+  padding: 108px 0;
+}
+
+.section-light {
+  background: var(--paper);
+}
+
+.section-heading {
+  margin-bottom: 50px;
+}
+
+.split-heading {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  align-items: end;
+  gap: 50px;
+}
+
+.section-heading h2,
+.deliverables-layout h2,
+.about-copy h2,
+.boundaries-copy h2,
+.final-cta h2 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.split-heading > p,
+.section-intro {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.service-card {
+  position: relative;
+  min-height: 302px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border: 1px solid var(--line);
+  background: var(--paper-bright);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.service-card:hover {
+  z-index: 1;
+  transform: translateY(-4px);
+  border-color: #98b8ca;
+  box-shadow: 0 24px 60px rgba(9, 19, 31, 0.1);
+}
+
+.service-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--blue-deep);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.service-topline span:last-child {
+  color: var(--muted);
+}
+
+.service-card h3 {
+  margin: 42px 0 14px;
+  font-size: 26px;
+  letter-spacing: -0.025em;
+}
+
+.service-card > p {
+  max-width: 510px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.service-delivery {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: auto;
+  padding-top: 25px;
+  border-top: 1px solid #dde0de;
+}
+
+.service-delivery span {
+  color: #354454;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.service-delivery strong {
+  font-size: 29px;
+  letter-spacing: -0.04em;
+}
+
+.catalog-block {
+  margin-top: 64px;
+  padding: 34px;
+  color: var(--white);
+  background: var(--ink);
+}
+
+.catalog-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+
+.catalog-title .kicker {
+  color: var(--blue);
+}
+
+.catalog-title h3 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.catalog-title > p {
+  max-width: 440px;
+  margin: 0;
+  color: #93a5b4;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.catalog-row {
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 1fr 190px 100px;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+}
+
+.catalog-row > :last-child {
+  text-align: right;
+}
+
+.catalog-row strong {
+  font-weight: 650;
+}
+
+.catalog-row span {
+  color: #9eafbc;
+}
+
+.catalog-row b {
+  color: var(--blue);
+  font-size: 16px;
+}
+
+.catalog-header {
+  min-height: 38px;
+  color: #607586;
+  border-top: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.catalog-header span {
+  color: #607586;
+}
+
+.catalog-note {
+  margin: 24px 0 0;
+  color: #7890a1;
+  font-size: 11px;
+}
+
+.section-process {
+  background: #e7e6e0;
+  border-top: 1px solid #d1d3cf;
+  border-bottom: 1px solid #d1d3cf;
+}
+
+.process-heading {
+  max-width: 750px;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid #bfc5c3;
+  border-bottom: 1px solid #bfc5c3;
+}
+
+.process-step {
+  min-height: 300px;
+  padding: 26px 25px 30px;
+  border-right: 1px solid #bfc5c3;
+}
+
+.process-step:last-child {
+  border-right: 0;
+}
+
+.step-number {
+  color: var(--blue-deep);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.process-step h3 {
+  margin: 74px 0 16px;
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.process-step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.section-ink {
+  color: var(--white);
+  background:
+    radial-gradient(circle at 20% 110%, rgba(55, 185, 255, 0.1), transparent 32%),
+    var(--ink);
+}
+
+.boundaries-layout {
+  display: grid;
+  grid-template-columns: 0.86fr 1.14fr;
+  align-items: start;
+  gap: 90px;
+}
+
+.kicker-blue {
+  color: var(--blue);
+}
+
+.boundaries-copy > p:not(.kicker) {
+  max-width: 540px;
+  margin: 28px 0 0;
+  color: #9eb0be;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.boundary-callout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 46px;
+  padding: 22px;
+  border-left: 3px solid var(--blue);
+  background: rgba(55, 185, 255, 0.07);
+}
+
+.boundary-callout span {
+  color: #718b9e;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.boundary-callout strong {
+  font-size: 16px;
+}
+
+.boundary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.boundary-grid article {
+  min-height: 240px;
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.boundary-grid .boundary-wide {
+  min-height: auto;
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 20px;
+}
+
+.boundary-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.boundary-safe {
+  color: var(--blue);
+}
+
+.boundary-stop {
+  color: var(--amber);
+}
+
+.boundary-neutral {
+  flex: 0 0 auto;
+  color: #aac1d2;
+}
+
+.boundary-grid h3 {
+  margin: 36px 0 13px;
+  font-size: 19px;
+}
+
+.boundary-grid .boundary-wide h3 {
+  margin-top: 0;
+}
+
+.boundary-grid p {
+  margin: 0;
+  color: #91a4b3;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.deliverables-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: start;
+  gap: 100px;
+}
+
+.section-intro {
+  max-width: 540px;
+  margin-top: 27px;
+}
+
+.deliverables-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.deliverables-list li {
+  min-height: 67px;
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.deliverables-list span {
+  color: var(--blue-deep);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.deliverables-list strong {
+  font-size: 14px;
+}
+
+.about-section {
+  color: var(--white);
+  background: var(--ink-soft);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 0.32fr 1.68fr;
+  align-items: center;
+  gap: 80px;
+}
+
+.about-mark {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(55, 185, 255, 0.35);
+  background:
+    linear-gradient(135deg, transparent 49.5%, rgba(55, 185, 255, 0.16) 50%, transparent 50.5%),
+    rgba(55, 185, 255, 0.04);
+  clip-path: polygon(12% 0, 88% 0, 100% 12%, 100% 88%, 88% 100%, 12% 100%, 0 88%, 0 12%);
+}
+
+.about-mark span {
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 0.85;
+}
+
+.about-mark small {
+  margin-top: 12px;
+  color: #8297a8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.about-copy {
+  max-width: 760px;
+}
+
+.about-copy .kicker {
+  color: var(--blue);
+}
+
+.about-copy > p:last-child {
+  margin: 28px 0 0;
+  color: #9cafbd;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.final-cta {
+  position: relative;
+  overflow: hidden;
+  padding: 110px 0;
+  color: var(--white);
+  text-align: center;
+  background: #07111b;
+}
+
+.cta-grid {
+  opacity: 0.16;
+  mask-image: radial-gradient(circle, black, transparent 67%);
+}
+
+.final-cta-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-cta h2 {
+  max-width: 800px;
+}
+
+.final-cta p:not(.kicker) {
+  max-width: 650px;
+  margin: 25px 0 35px;
+  color: #99abb8;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.final-cta small {
+  margin-top: 16px;
+  color: #668096;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+footer {
+  color: #73899a;
+  background: #050c13;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-inner {
+  min-height: 98px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 36px;
+}
+
+.brand-footer {
+  color: var(--white);
+}
+
+.footer-inner p {
+  margin: 0;
+  font-size: 10px;
+}
+
+@media (max-width: 1020px) {
+  .header-inner nav {
+    display: none;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 54px;
+  }
+
+  .hero-copy {
+    max-width: 780px;
+  }
+
+  .scope-console {
+    max-width: 680px;
+  }
+
+  .trust-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-strip span:nth-child(2) {
+    justify-content: flex-end;
+    border-right: 0;
+  }
+
+  .trust-strip span:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .split-heading,
+  .boundaries-layout,
+  .deliverables-layout {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .split-heading > p {
+    max-width: 650px;
+  }
+
+  .process-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .process-step:nth-child(2) {
+    border-right: 0;
+  }
+
+  .process-step:nth-child(-n + 2) {
+    border-bottom: 1px solid #bfc5c3;
+  }
+
+  .about-layout {
+    grid-template-columns: 230px 1fr;
+    gap: 55px;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    padding: 28px 0;
+  }
+
+  .footer-inner p:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --shell: min(100% - 28px, 1180px);
+  }
+
+  .header-inner {
+    min-height: 66px;
+  }
+
+  .header-inner .button {
+    display: none;
+  }
+
+  .hero-layout {
+    min-height: auto;
+    padding: 70px 0 56px;
+  }
+
+  .hero h1 {
+    font-size: clamp(43px, 13vw, 62px);
+  }
+
+  .hero-lede {
+    font-size: 16px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+
+  .console-body {
+    padding: 24px 18px;
+  }
+
+  .console-body h2 {
+    font-size: 24px;
+  }
+
+  .scope-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .scope-flow b {
+    transform: rotate(90deg);
+    text-align: center;
+  }
+
+  .console-rules p {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .console-topline,
+  .console-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .trust-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .trust-strip span,
+  .trust-strip span:nth-child(2),
+  .trust-strip span:last-child {
+    min-height: 50px;
+    justify-content: flex-start;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .section {
+    padding: 78px 0;
+  }
+
+  .service-grid,
+  .boundary-grid,
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card {
+    min-height: 290px;
+    padding: 24px;
+  }
+
+  .catalog-block {
+    margin-top: 42px;
+    padding: 26px 20px;
+  }
+
+  .catalog-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .catalog-title > p {
+    text-align: left;
+  }
+
+  .catalog-header {
+    display: none;
+  }
+
+  .catalog-row {
+    grid-template-columns: 1fr auto;
+    gap: 8px 20px;
+    padding: 14px 0;
+  }
+
+  .catalog-row strong {
+    grid-column: 1 / -1;
+  }
+
+  .catalog-row > :last-child {
+    text-align: left;
+  }
+
+  .catalog-row b {
+    text-align: right;
+  }
+
+  .process-step,
+  .process-step:nth-child(2) {
+    min-height: 245px;
+    border-right: 0;
+    border-bottom: 1px solid #bfc5c3;
+  }
+
+  .process-step:last-child {
+    border-bottom: 0;
+  }
+
+  .process-step h3 {
+    margin-top: 55px;
+  }
+
+  .boundary-grid .boundary-wide {
+    grid-column: auto;
+    display: block;
+  }
+
+  .boundary-grid .boundary-wide h3 {
+    margin-top: 36px;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-mark {
+    width: 180px;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footer-inner p:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <main>
+      <header class="site-header">
+        <div class="shell header-inner">
+          <a class="brand" href="#top" aria-label="SPARTAN Ops home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>
+              <strong>SPARTAN</strong>
+              <small>OPS</small>
+            </span>
+          </a>
+          <nav aria-label="Primary navigation">
+            <a href="#services">Services</a>
+            <a href="#process">Process</a>
+            <a href="#boundaries">Data boundaries</a>
+          </nav>
+          <a
+            class="button button-small button-solid"
+            href="mailto:spartan337.ops@gmail.com?subject=Fixed-scope%20service%20request&amp;body=Hi%20Nicholas%2C%0A%0AI%20need%20help%20with%3A%0A%0AThe%20result%20I%20need%20is%3A%0A%0AI%20can%20share%20this%20public%20URL%20or%20redacted%20sample%3A%0A"
+          >Request a scope</a>
+        </div>
+      </header>
+
+      <section class="hero" id="top">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="shell hero-layout">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <span class="signal-dot"></span> Phoenix + Tempe · Remote available
+            </p>
+            <h1>
+              Small computer and data jobs,
+              <span> handled professionally.</span>
+            </h1>
+            <p class="hero-lede">
+              Fast, fixed-scope spreadsheet cleanup, website QA, document
+              extraction, and small automation—with clear deliverables you can
+              review before payment is requested.
+            </p>
+            <div class="hero-actions">
+              <a
+                class="button button-solid"
+                href="mailto:spartan337.ops@gmail.com?subject=Fixed-scope%20service%20request&amp;body=Hi%20Nicholas%2C%0A%0AI%20need%20help%20with%3A%0A%0AThe%20result%20I%20need%20is%3A%0A%0AI%20can%20share%20this%20public%20URL%20or%20redacted%20sample%3A%0A"
+              >
+                Email a redacted sample
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a class="button button-ghost" href="#services">
+                View fixed-price services
+              </a>
+            </div>
+            <p class="microcopy">
+              Start with one public URL or redacted sample. Please do not send
+              passwords or sensitive personal or financial information.
+            </p>
+          </div>
+
+          <div class="scope-console" aria-label="Example project workflow">
+            <div class="console-topline">
+              <span>FIXED-SCOPE WORKFLOW</span>
+              <span class="console-status">
+                <i></i> HUMAN SUPERVISED
+              </span>
+            </div>
+            <div class="console-body">
+              <p class="console-label">A clean handoff, every time</p>
+              <h2>Sample → scope → useful delivery</h2>
+              <div class="scope-flow">
+                <div>
+                  <span>INPUT</span>
+                  <strong>Redacted sample</strong>
+                </div>
+                <b aria-hidden="true">→</b>
+                <div>
+                  <span>AGREEMENT</span>
+                  <strong>Exact scope</strong>
+                </div>
+                <b aria-hidden="true">→</b>
+                <div>
+                  <span>OUTPUT</span>
+                  <strong>Reviewable files</strong>
+                </div>
+              </div>
+              <div class="console-rules">
+                <p>
+                  <span>PRICE</span>
+                  <strong>Fixed before work</strong>
+                </p>
+                <p>
+                  <span>PAYMENT</span>
+                  <strong>After approved delivery</strong>
+                </p>
+                <p>
+                  <span>ACCESS</span>
+                  <strong>Minimum data needed</strong>
+                </p>
+              </div>
+            </div>
+            <div class="console-footer">
+              <span>LOCAL-FIRST WORKFLOW</span>
+              <span>APPROVAL CONTROLLED</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="shell trust-strip" aria-label="Service commitments">
+          <span><i aria-hidden="true">✓</i> Fixed scope before work</span>
+          <span><i aria-hidden="true">✓</i> Human supervised</span>
+          <span><i aria-hidden="true">✓</i> Minimal-data workflow</span>
+          <span><i aria-hidden="true">✓</i> Payment after approved delivery</span>
+        </div>
+      </section>
+
+      <section class="section section-light" id="services">
+        <div class="shell">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="kicker">FIXED-PRICE SERVICES</p>
+              <h2>Get one small job off your list.</h2>
+            </div>
+            <p>
+              Designed for narrow, practical tasks that need a clean result—not
+              a long contract or a vague technology package.
+            </p>
+          </div>
+
+          <div class="service-grid">
+            <article class="service-card">
+              <div class="service-topline">
+                <span>DATA-01</span>
+                <span>45–90 min</span>
+              </div>
+              <h3>Spreadsheet cleanup</h3>
+              <p>
+                Up to 100 rows cleaned, normalized, and returned as a practical
+                CSV or XLSX file.
+              </p>
+              <div class="service-delivery">
+                <span>Clean file + change summary</span>
+                <strong>$35</strong>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-topline">
+                <span>WEB-02</span>
+                <span>1.5–3 hrs</span>
+              </div>
+              <h3>Website QA report</h3>
+              <p>
+                A focused review of up to five public pages with ranked issues
+                and clear reproduction steps.
+              </p>
+              <div class="service-delivery">
+                <span>Evidence + priority report</span>
+                <strong>$95</strong>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-topline">
+                <span>DOC-03</span>
+                <span>2–4 hrs</span>
+              </div>
+              <h3>PDF or text extraction</h3>
+              <p>
+                Relevant text or tables extracted from one confirmed document
+                set into structured output.
+              </p>
+              <div class="service-delivery">
+                <span>Structured CSV or XLSX</span>
+                <strong>$125</strong>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-topline">
+                <span>AUTO-04</span>
+                <span>2–4 hrs</span>
+              </div>
+              <h3>Small automation script</h3>
+              <p>
+                One bounded Python task for renaming files, cleaning CSVs,
+                parsing text, or extracting links.
+              </p>
+              <div class="service-delivery">
+                <span>Script + run instructions</span>
+                <strong>$150</strong>
+              </div>
+            </article>
+          </div>
+
+          <div class="catalog-block">
+            <div class="catalog-title">
+              <div>
+                <p class="kicker">COMPLETE SERVICE MENU</p>
+                <h3>Transparent starting prices</h3>
+              </div>
+              <p>
+                Final scope and availability are confirmed in writing before
+                work begins.
+              </p>
+            </div>
+            <div class="catalog-table" role="table" aria-label="Service menu">
+              <div class="catalog-row catalog-header" role="row">
+                <span role="columnheader">Service</span>
+                <span role="columnheader">Delivery target</span>
+                <span role="columnheader">Price</span>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">Quick spreadsheet cleanup</strong>
+                <span role="cell">45–90 min</span>
+                <b role="cell">$35</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">File rename and folder cleanup</strong>
+                <span role="cell">45–120 min</span>
+                <b role="cell">$50</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">Prompt pack and SOP</strong>
+                <span role="cell">60–120 min</span>
+                <b role="cell">$65</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">Business data cleanup</strong>
+                <span role="cell">1.5–3 hrs</span>
+                <b role="cell">$75</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">Inventory CSV normalization</strong>
+                <span role="cell">1.5–3 hrs</span>
+                <b role="cell">$85</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">Website QA report</strong>
+                <span role="cell">1.5–3 hrs</span>
+                <b role="cell">$95</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">PDF or text extraction</strong>
+                <span role="cell">2–4 hrs</span>
+                <b role="cell">$125</b>
+              </div>
+              <div class="catalog-row" role="row">
+                <strong role="cell">Mini automation script</strong>
+                <span role="cell">2–4 hrs</span>
+                <b role="cell">$150</b>
+              </div>
+            </div>
+            <p class="catalog-note">
+              Same-day turnaround is available only when the scope and current
+              availability are confirmed.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-process" id="process">
+        <div class="shell">
+          <div class="section-heading process-heading">
+            <p class="kicker">HOW IT WORKS</p>
+            <h2>A clear process from sample to delivery.</h2>
+          </div>
+          <div class="process-grid">
+            <article class="process-step">
+              <span class="step-number">01</span>
+              <h3>Send one sample</h3>
+              <p>
+                Share a public URL, a redacted sample file, or 10–20 sample rows
+                and describe the result you need.
+              </p>
+            </article>
+            <article class="process-step">
+              <span class="step-number">02</span>
+              <h3>Receive an exact scope</h3>
+              <p>
+                You get the deliverables, fixed price, turnaround, acceptance
+                check, and revision boundary in writing.
+              </p>
+            </article>
+            <article class="process-step">
+              <span class="step-number">03</span>
+              <h3>Approve before work</h3>
+              <p>
+                Nothing starts until the scope is clear and you approve it. No
+                subscription or open-ended access is required.
+              </p>
+            </article>
+            <article class="process-step">
+              <span class="step-number">04</span>
+              <h3>Review the delivery</h3>
+              <p>
+                Inspect the finished files and supporting evidence. Payment is
+                requested only after you approve delivered service work.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-ink" id="boundaries">
+        <div class="shell boundaries-layout">
+          <div class="boundaries-copy">
+            <p class="kicker kicker-blue">DATA BOUNDARIES</p>
+            <h2>Your data stays inside the agreed scope.</h2>
+            <p>
+              A public page or redacted sample is preferred whenever possible.
+              SPARTAN supports intake, checking, delivery, and approvals through
+              a local-first, human-supervised workflow.
+            </p>
+            <div class="boundary-callout">
+              <span>INITIAL REVIEW</span>
+              <strong>No account access is needed.</strong>
+            </div>
+          </div>
+          <div class="boundary-grid">
+            <article>
+              <span class="boundary-icon boundary-safe" aria-hidden="true">✓</span>
+              <div>
+                <h3>Good to share</h3>
+                <p>
+                  Public URLs, redacted sample files, example rows, and a clear
+                  description of the outcome you need.
+                </p>
+              </div>
+            </article>
+            <article>
+              <span class="boundary-icon boundary-stop" aria-hidden="true">×</span>
+              <div>
+                <h3>Please do not share</h3>
+                <p>
+                  Passwords, SSN, banking, card, tax, health, or private
+                  customer information during initial review.
+                </p>
+              </div>
+            </article>
+            <article class="boundary-wide">
+              <span class="boundary-icon boundary-neutral" aria-hidden="true">◎</span>
+              <div>
+                <h3>Approval stays with you</h3>
+                <p>
+                  The workflow does not automatically send messages, publish
+                  content, make purchases, or access accounts. You approve the
+                  exact work and review the result.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-light">
+        <div class="shell deliverables-layout">
+          <div>
+            <p class="kicker">WHAT YOU RECEIVE</p>
+            <h2>Professional proof instead of vague promises.</h2>
+            <p class="section-intro">
+              Every job is packaged so you can see what was done, check the
+              result, and use the deliverable immediately.
+            </p>
+          </div>
+          <ul class="deliverables-list">
+            <li><span>01</span><strong>Written scope and fixed price</strong></li>
+            <li><span>02</span><strong>Clearly named deliverable files</strong></li>
+            <li><span>03</span><strong>Evidence or structured output</strong></li>
+            <li><span>04</span><strong>One correction for scope mistakes</strong></li>
+            <li><span>05</span><strong>Practical handoff instructions</strong></li>
+            <li><span>06</span><strong>No surprise job expansion</strong></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section about-section">
+        <div class="shell about-layout">
+          <div class="about-mark" aria-hidden="true">
+            <span>S</span>
+            <small>337</small>
+          </div>
+          <div class="about-copy">
+            <p class="kicker">ABOUT SPARTAN OPS</p>
+            <h2>Practical support. Human judgment. Clear control.</h2>
+            <p>
+              SPARTAN Ops is Nicholas Brasseur's supervised workflow for small,
+              bounded computer and data tasks. It is built around useful
+              deliverables, visible evidence, and approval-controlled work—not
+              unattended activity or inflated claims.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta" id="contact">
+        <div class="cta-grid" aria-hidden="true"></div>
+        <div class="shell final-cta-inner">
+          <p class="kicker kicker-blue">READY WHEN THE SCOPE IS</p>
+          <h2>Have one small job that needs to get done?</h2>
+          <p>
+            Send one sample and describe the result you need. You will receive a
+            written fixed-scope response before anything starts.
+          </p>
+          <a
+            class="button button-solid button-large"
+            href="mailto:spartan337.ops@gmail.com?subject=Fixed-scope%20service%20request&amp;body=Hi%20Nicholas%2C%0A%0AI%20need%20help%20with%3A%0A%0AThe%20result%20I%20need%20is%3A%0A%0AI%20can%20share%20this%20public%20URL%20or%20redacted%20sample%3A%0A"
+          >
+            Email Nicholas
+            <span aria-hidden="true">↗</span>
+          </a>
+          <small>spartan337.ops@gmail.com</small>
+        </div>
+      </section>
+
+      <footer>
+        <div class="shell footer-inner">
+          <a class="brand brand-footer" href="#top">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>
+              <strong>SPARTAN</strong>
+              <small>OPS</small>
+            </span>
+          </a>
+          <p>Phoenix + Tempe, Arizona · Remote work available</p>
+          <p>Availability and turnaround confirmed per project.</p>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
