@@ -1,1656 +1,3380 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta
-      name="description"
-      content="Fast, fixed-scope spreadsheet cleanup, website QA, document extraction, and small automation from SPARTAN Ops."
-    >
-    <meta name="theme-color" content="#09131f">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="SPARTAN Ops | Fixed-scope computer and data services">
-    <meta
-      property="og:description"
-      content="Small computer and data jobs, handled professionally with clear scope, deliverables, and approval."
-    >
-<meta property="og:url" content="https://spartan337ops.github.io/">
-    <meta name="twitter:card" content="summary_large_image">
-    <title>SPARTAN Ops | Fixed-scope computer and data services</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%3Cpath%20d%3D%22M11%204H53L60%2011V53L53%2060H11L4%2053V11L11%204Z%22%20fill%3D%22%2309131F%22%20stroke%3D%22%2337B9FF%22%20stroke-width%3D%224%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M43%2019H25C20.6%2019%2018%2021.7%2018%2025.4C18%2029.1%2020.5%2031.1%2024.6%2032L38.5%2035C41%2035.5%2042.5%2036.7%2042.5%2038.8C42.5%2041.2%2040.7%2042.7%2037.6%2042.7H19%22%20stroke%3D%22%2337B9FF%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22square%22%2F%3E%0A%3C%2Fsvg%3E%0A" type="image/svg+xml">
-    <style>
-:root {
-  --ink: #09131f;
-  --ink-soft: #111f2e;
-  --ink-raised: #16283a;
-  --paper: #f4f1e9;
-  --paper-bright: #fbfaf6;
-  --line: #cfd2cf;
-  --muted: #64707b;
-  --blue: #37b9ff;
-  --blue-deep: #0879bb;
-  --amber: #f4b942;
-  --white: #ffffff;
-  --radius: 4px;
-  --shell: min(1180px, calc(100% - 40px));
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 84px;
-}
-
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  text-rendering: optimizeLegibility;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.shell {
-  width: var(--shell);
-  margin-inline: auto;
-}
-
-.site-header {
-  position: sticky;
-  z-index: 40;
-  top: 0;
-  color: var(--white);
-  background: rgba(9, 19, 31, 0.94);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
-  backdrop-filter: blur(16px);
-}
-
-.header-inner {
-  min-height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 28px;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  letter-spacing: 0.08em;
-}
-
-.brand-mark {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  color: var(--ink);
-  background: var(--blue);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 17px;
-  font-weight: 900;
-  clip-path: polygon(10% 0, 90% 0, 100% 18%, 100% 82%, 90% 100%, 10% 100%, 0 82%, 0 18%);
-}
-
-.brand > span:last-child {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.brand strong {
-  font-size: 15px;
-  line-height: 1;
-}
-
-.brand small {
-  color: var(--blue);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
-
-nav a {
-  color: #aebbc8;
-  font-size: 13px;
-  font-weight: 650;
-  transition: color 160ms ease;
-}
-
-nav a:hover,
-nav a:focus-visible {
-  color: var(--white);
-}
-
-.button {
-  min-height: 50px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 0 22px;
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  font-size: 14px;
-  font-weight: 800;
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-}
-
-.button:hover {
-  transform: translateY(-2px);
-}
-
-.button:focus-visible,
-nav a:focus-visible,
-.brand:focus-visible {
-  outline: 3px solid var(--amber);
-  outline-offset: 3px;
-}
-
-.button-solid {
-  color: var(--ink);
-  background: var(--blue);
-  box-shadow: 0 10px 28px rgba(55, 185, 255, 0.18);
-}
-
-.button-solid:hover {
-  background: #6fceff;
-}
-
-.button-ghost {
-  color: var(--white);
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.button-ghost:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.button-small {
-  min-height: 40px;
-  padding-inline: 17px;
-  font-size: 12px;
-}
-
-.button-large {
-  min-height: 58px;
-  padding-inline: 30px;
-}
-
-.hero {
-  position: relative;
-  overflow: hidden;
-  color: var(--white);
-  background:
-    radial-gradient(circle at 82% 16%, rgba(55, 185, 255, 0.13), transparent 28%),
-    linear-gradient(135deg, #09131f 0%, #0a1724 58%, #102438 100%);
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  width: 460px;
-  height: 460px;
-  right: -250px;
-  bottom: 2%;
-  border: 1px solid rgba(55, 185, 255, 0.18);
-  transform: rotate(45deg);
-}
-
-.hero-grid,
-.cta-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.2;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(to bottom, black, transparent 84%);
-}
-
-.hero-layout {
-  position: relative;
-  z-index: 1;
-  min-height: 650px;
-  display: grid;
-  grid-template-columns: 1.03fr 0.97fr;
-  align-items: center;
-  gap: 72px;
-  padding: 84px 0 74px;
-}
-
-.eyebrow,
-.kicker,
-.console-label {
-  margin: 0 0 22px;
-  color: var(--blue-deep);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #adc3d5;
-}
-
-.signal-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 0 0 0 5px rgba(55, 185, 255, 0.13);
-}
-
-.hero h1 {
-  max-width: 700px;
-  margin: 0;
-  font-size: clamp(48px, 5.5vw, 78px);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
-}
-
-.hero h1 span {
-  display: block;
-  color: var(--blue);
-}
-
-.hero-lede {
-  max-width: 655px;
-  margin: 30px 0 0;
-  color: #bdc9d4;
-  font-size: 18px;
-  line-height: 1.7;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 36px;
-}
-
-.microcopy {
-  max-width: 590px;
-  margin: 20px 0 0;
-  color: #7f94a7;
-  font-size: 12px;
-  line-height: 1.65;
-}
-
-.scope-console {
-  position: relative;
-  border: 1px solid rgba(148, 179, 204, 0.26);
-  background: rgba(8, 19, 31, 0.76);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(10px);
-}
-
-.scope-console::before {
-  content: "";
-  position: absolute;
-  width: 38px;
-  height: 38px;
-  top: -1px;
-  right: -1px;
-  border-top: 2px solid var(--blue);
-  border-right: 2px solid var(--blue);
-}
-
-.console-topline,
-.console-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 15px 20px;
-  color: #7f94a7;
-  border-bottom: 1px solid rgba(148, 179, 204, 0.16);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-.console-status {
-  color: #b9e7ff;
-}
-
-.console-status i {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: 6px;
-  border-radius: 50%;
-  background: var(--blue);
-}
-
-.console-body {
-  padding: 32px;
-}
-
-.console-label {
-  margin-bottom: 12px;
-  color: var(--blue);
-}
-
-.console-body h2 {
-  max-width: 410px;
-  margin: 0;
-  font-size: 30px;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
-.scope-flow {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
-  align-items: center;
-  gap: 10px;
-  margin: 34px 0;
-}
-
-.scope-flow div {
-  min-height: 84px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 12px;
-  border: 1px solid rgba(148, 179, 204, 0.18);
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.scope-flow span,
-.console-rules span {
-  color: #71889b;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.scope-flow strong {
-  margin-top: 8px;
-  color: #dce8f1;
-  font-size: 11px;
-  line-height: 1.35;
-}
-
-.scope-flow b {
-  color: var(--blue);
-}
-
-.console-rules {
-  display: grid;
-  gap: 0;
-  border-top: 1px solid rgba(148, 179, 204, 0.16);
-}
-
-.console-rules p {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(148, 179, 204, 0.12);
-}
-
-.console-rules strong {
-  color: #c9d4de;
-  font-size: 11px;
-}
-
-.console-footer {
-  border-top: 1px solid rgba(148, 179, 204, 0.16);
-  border-bottom: 0;
-}
-
-.trust-strip {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.trust-strip span {
-  min-height: 68px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #aebcca;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.trust-strip span:last-child {
-  border-right: 0;
-  justify-content: flex-end;
-}
-
-.trust-strip i {
-  color: var(--blue);
-  font-style: normal;
-}
-
-.section {
-  padding: 108px 0;
-}
-
-.section-light {
-  background: var(--paper);
-}
-
-.section-heading {
-  margin-bottom: 50px;
-}
-
-.split-heading {
-  display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
-  align-items: end;
-  gap: 50px;
-}
-
-.section-heading h2,
-.deliverables-layout h2,
-.about-copy h2,
-.boundaries-copy h2,
-.final-cta h2 {
-  max-width: 780px;
-  margin: 0;
-  font-size: clamp(38px, 4vw, 58px);
-  line-height: 1.05;
-  letter-spacing: -0.045em;
-}
-
-.split-heading > p,
-.section-intro {
-  margin: 0;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.service-card {
-  position: relative;
-  min-height: 302px;
-  display: flex;
-  flex-direction: column;
-  padding: 30px;
-  border: 1px solid var(--line);
-  background: var(--paper-bright);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.service-card:hover {
-  z-index: 1;
-  transform: translateY(-4px);
-  border-color: #98b8ca;
-  box-shadow: 0 24px 60px rgba(9, 19, 31, 0.1);
-}
-
-.service-topline {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  color: var(--blue-deep);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-.service-topline span:last-child {
-  color: var(--muted);
-}
-
-.service-card h3 {
-  margin: 42px 0 14px;
-  font-size: 26px;
-  letter-spacing: -0.025em;
-}
-
-.service-card > p {
-  max-width: 510px;
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.service-delivery {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-  margin-top: auto;
-  padding-top: 25px;
-  border-top: 1px solid #dde0de;
-}
-
-.service-delivery span {
-  color: #354454;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.service-delivery strong {
-  font-size: 29px;
-  letter-spacing: -0.04em;
-}
-
-.catalog-block {
-  margin-top: 64px;
-  padding: 34px;
-  color: var(--white);
-  background: var(--ink);
-}
-
-.catalog-title {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 32px;
-}
-
-.catalog-title .kicker {
-  color: var(--blue);
-}
-
-.catalog-title h3 {
-  margin: 0;
-  font-size: 28px;
-  letter-spacing: -0.03em;
-}
-
-.catalog-title > p {
-  max-width: 440px;
-  margin: 0;
-  color: #93a5b4;
-  font-size: 13px;
-  line-height: 1.6;
-  text-align: right;
-}
-
-.catalog-row {
-  min-height: 56px;
-  display: grid;
-  grid-template-columns: 1fr 190px 100px;
-  align-items: center;
-  gap: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 13px;
-}
-
-.catalog-row > :last-child {
-  text-align: right;
-}
-
-.catalog-row strong {
-  font-weight: 650;
-}
-
-.catalog-row span {
-  color: #9eafbc;
-}
-
-.catalog-row b {
-  color: var(--blue);
-  font-size: 16px;
-}
-
-.catalog-header {
-  min-height: 38px;
-  color: #607586;
-  border-top: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.catalog-header span {
-  color: #607586;
-}
-
-.catalog-note {
-  margin: 24px 0 0;
-  color: #7890a1;
-  font-size: 11px;
-}
-
-.section-process {
-  background: #e7e6e0;
-  border-top: 1px solid #d1d3cf;
-  border-bottom: 1px solid #d1d3cf;
-}
-
-.process-heading {
-  max-width: 750px;
-}
-
-.process-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid #bfc5c3;
-  border-bottom: 1px solid #bfc5c3;
-}
-
-.process-step {
-  min-height: 300px;
-  padding: 26px 25px 30px;
-  border-right: 1px solid #bfc5c3;
-}
-
-.process-step:last-child {
-  border-right: 0;
-}
-
-.step-number {
-  color: var(--blue-deep);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.process-step h3 {
-  margin: 74px 0 16px;
-  font-size: 20px;
-  letter-spacing: -0.025em;
-}
-
-.process-step p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.section-ink {
-  color: var(--white);
-  background:
-    radial-gradient(circle at 20% 110%, rgba(55, 185, 255, 0.1), transparent 32%),
-    var(--ink);
-}
-
-.boundaries-layout {
-  display: grid;
-  grid-template-columns: 0.86fr 1.14fr;
-  align-items: start;
-  gap: 90px;
-}
-
-.kicker-blue {
-  color: var(--blue);
-}
-
-.boundaries-copy > p:not(.kicker) {
-  max-width: 540px;
-  margin: 28px 0 0;
-  color: #9eb0be;
-  font-size: 16px;
-  line-height: 1.75;
-}
-
-.boundary-callout {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 46px;
-  padding: 22px;
-  border-left: 3px solid var(--blue);
-  background: rgba(55, 185, 255, 0.07);
-}
-
-.boundary-callout span {
-  color: #718b9e;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.boundary-callout strong {
-  font-size: 16px;
-}
-
-.boundary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.boundary-grid article {
-  min-height: 240px;
-  padding: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.boundary-grid .boundary-wide {
-  min-height: auto;
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 20px;
-}
-
-.boundary-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-size: 18px;
-}
-
-.boundary-safe {
-  color: var(--blue);
-}
-
-.boundary-stop {
-  color: var(--amber);
-}
-
-.boundary-neutral {
-  flex: 0 0 auto;
-  color: #aac1d2;
-}
-
-.boundary-grid h3 {
-  margin: 36px 0 13px;
-  font-size: 19px;
-}
-
-.boundary-grid .boundary-wide h3 {
-  margin-top: 0;
-}
-
-.boundary-grid p {
-  margin: 0;
-  color: #91a4b3;
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.deliverables-layout {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  align-items: start;
-  gap: 100px;
-}
-
-.section-intro {
-  max-width: 540px;
-  margin-top: 27px;
-}
-
-.deliverables-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-
-.deliverables-list li {
-  min-height: 67px;
-  display: grid;
-  grid-template-columns: 55px 1fr;
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-}
-
-.deliverables-list span {
-  color: var(--blue-deep);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.deliverables-list strong {
-  font-size: 14px;
-}
-
-.about-section {
-  color: var(--white);
-  background: var(--ink-soft);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.about-layout {
-  display: grid;
-  grid-template-columns: 0.32fr 1.68fr;
-  align-items: center;
-  gap: 80px;
-}
-
-.about-mark {
-  aspect-ratio: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(55, 185, 255, 0.35);
-  background:
-    linear-gradient(135deg, transparent 49.5%, rgba(55, 185, 255, 0.16) 50%, transparent 50.5%),
-    rgba(55, 185, 255, 0.04);
-  clip-path: polygon(12% 0, 88% 0, 100% 12%, 100% 88%, 88% 100%, 12% 100%, 0 88%, 0 12%);
-}
-
-.about-mark span {
-  color: var(--blue);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 64px;
-  font-weight: 900;
-  line-height: 0.85;
-}
-
-.about-mark small {
-  margin-top: 12px;
-  color: #8297a8;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-}
-
-.about-copy {
-  max-width: 760px;
-}
-
-.about-copy .kicker {
-  color: var(--blue);
-}
-
-.about-copy > p:last-child {
-  margin: 28px 0 0;
-  color: #9cafbd;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-.final-cta {
-  position: relative;
-  overflow: hidden;
-  padding: 110px 0;
-  color: var(--white);
-  text-align: center;
-  background: #07111b;
-}
-
-.cta-grid {
-  opacity: 0.16;
-  mask-image: radial-gradient(circle, black, transparent 67%);
-}
-
-.final-cta-inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.final-cta h2 {
-  max-width: 800px;
-}
-
-.final-cta p:not(.kicker) {
-  max-width: 650px;
-  margin: 25px 0 35px;
-  color: #99abb8;
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.final-cta small {
-  margin-top: 16px;
-  color: #668096;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-}
-
-footer {
-  color: #73899a;
-  background: #050c13;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.footer-inner {
-  min-height: 98px;
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 36px;
-}
-
-.brand-footer {
-  color: var(--white);
-}
-
-.footer-inner p {
-  margin: 0;
-  font-size: 10px;
-}
-
-@media (max-width: 1020px) {
-  .header-inner nav {
-    display: none;
-  }
-
-  .hero-layout {
-    grid-template-columns: 1fr;
-    gap: 54px;
-  }
-
-  .hero-copy {
-    max-width: 780px;
-  }
-
-  .scope-console {
-    max-width: 680px;
-  }
-
-  .trust-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .trust-strip span:nth-child(2) {
-    justify-content: flex-end;
-    border-right: 0;
-  }
-
-  .trust-strip span:nth-child(-n + 2) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .split-heading,
-  .boundaries-layout,
-  .deliverables-layout {
-    grid-template-columns: 1fr;
-    gap: 42px;
-  }
-
-  .split-heading > p {
-    max-width: 650px;
-  }
-
-  .process-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .process-step:nth-child(2) {
-    border-right: 0;
-  }
-
-  .process-step:nth-child(-n + 2) {
-    border-bottom: 1px solid #bfc5c3;
-  }
-
-  .about-layout {
-    grid-template-columns: 230px 1fr;
-    gap: 55px;
-  }
-
-  .footer-inner {
-    grid-template-columns: 1fr 1fr;
-    padding: 28px 0;
-  }
-
-  .footer-inner p:last-child {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 720px) {
-  :root {
-    --shell: min(100% - 28px, 1180px);
-  }
-
-  .header-inner {
-    min-height: 66px;
-  }
-
-  .header-inner .button {
-    display: none;
-  }
-
-  .hero-layout {
-    min-height: auto;
-    padding: 70px 0 56px;
-  }
-
-  .hero h1 {
-    font-size: clamp(43px, 13vw, 62px);
-  }
-
-  .hero-lede {
-    font-size: 16px;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .hero-actions .button {
-    width: 100%;
-  }
-
-  .console-body {
-    padding: 24px 18px;
-  }
-
-  .console-body h2 {
-    font-size: 24px;
-  }
-
-  .scope-flow {
-    grid-template-columns: 1fr;
-  }
-
-  .scope-flow b {
-    transform: rotate(90deg);
-    text-align: center;
-  }
-
-  .console-rules p {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .console-topline,
-  .console-footer {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .trust-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .trust-strip span,
-  .trust-strip span:nth-child(2),
-  .trust-strip span:last-child {
-    min-height: 50px;
-    justify-content: flex-start;
-    border-right: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .section {
-    padding: 78px 0;
-  }
-
-  .service-grid,
-  .boundary-grid,
-  .process-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .service-card {
-    min-height: 290px;
-    padding: 24px;
-  }
-
-  .catalog-block {
-    margin-top: 42px;
-    padding: 26px 20px;
-  }
-
-  .catalog-title {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .catalog-title > p {
-    text-align: left;
-  }
-
-  .catalog-header {
-    display: none;
-  }
-
-  .catalog-row {
-    grid-template-columns: 1fr auto;
-    gap: 8px 20px;
-    padding: 14px 0;
-  }
-
-  .catalog-row strong {
-    grid-column: 1 / -1;
-  }
-
-  .catalog-row > :last-child {
-    text-align: left;
-  }
-
-  .catalog-row b {
-    text-align: right;
-  }
-
-  .process-step,
-  .process-step:nth-child(2) {
-    min-height: 245px;
-    border-right: 0;
-    border-bottom: 1px solid #bfc5c3;
-  }
-
-  .process-step:last-child {
-    border-bottom: 0;
-  }
-
-  .process-step h3 {
-    margin-top: 55px;
-  }
-
-  .boundary-grid .boundary-wide {
-    grid-column: auto;
-    display: block;
-  }
-
-  .boundary-grid .boundary-wide h3 {
-    margin-top: 36px;
-  }
-
-  .about-layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .about-mark {
-    width: 180px;
-  }
-
-  .footer-inner {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .footer-inner p:last-child {
-    grid-column: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-</style>
-  </head>
-  <body>
-    <main>
-      <header class="site-header">
-        <div class="shell header-inner">
-          <a class="brand" href="#top" aria-label="SPARTAN Ops home">
-            <span class="brand-mark" aria-hidden="true">S</span>
-            <span>
-              <strong>SPARTAN</strong>
-              <small>OPS</small>
-            </span>
-          </a>
-          <nav aria-label="Primary navigation">
-            <a href="#services">Services</a>
-            <a href="#process">Process</a>
-            <a href="#boundaries">Data boundaries</a>
-          </nav>
-          <a
-            class="button button-small button-solid"
-            href="mailto:spartan337.ops@gmail.com?subject=Fixed-scope%20service%20request&amp;body=Hi%20Nicholas%2C%0A%0AI%20need%20help%20with%3A%0A%0AThe%20result%20I%20need%20is%3A%0A%0AI%20can%20share%20this%20public%20URL%20or%20redacted%20sample%3A%0A"
-          >Request a scope</a>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Spreadsheet cleanup, document extraction, website QA, workflow documentation, and local automation. Get a written scope and fixed price before work begins.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#08131d">
+  <meta property="og:title" content="SPARTAN Ops | Spreadsheet Cleanup, Document Extraction &amp; Website QA">
+  <meta property="og:description" content="Clear spreadsheet, document, website QA, workflow, and local automation deliverables with written scope and fixed-price confirmation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://spartan337ops.github.io/">
+  <meta property="og:image" content="https://spartan337ops.github.io/spartan-ops-social-preview.png">
+  <meta property="og:image:width" content="1536">
+  <meta property="og:image:height" content="1024">
+  <meta property="og:image:alt" content="SPARTAN Ops: Clear, usable deliverables for spreadsheet, document, website QA, and workflow services.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SPARTAN Ops | Spreadsheet Cleanup, Document Extraction &amp; Website QA">
+  <meta name="twitter:description" content="Practical data and operations help with a written scope and fixed-price confirmation before work begins.">
+  <meta name="twitter:image" content="https://spartan337ops.github.io/spartan-ops-social-preview.png">
+  <meta name="twitter:image:alt" content="SPARTAN Ops: Clear, usable deliverables for spreadsheet, document, website QA, and workflow services.">
+  <link rel="canonical" href="https://spartan337ops.github.io/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2308131d'/%3E%3Cpath d='M14 16h36v9H25v7h25v17H14v-9h25v-7H14z' fill='%23efb27b'/%3E%3C/svg%3E">
+  <title>SPARTAN Ops | Spreadsheet Cleanup, Document Extraction &amp; Website QA</title>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://spartan337ops.github.io/#organization",
+          "name": "SPARTAN Ops",
+          "url": "https://spartan337ops.github.io/",
+          "email": "spartan337.ops@gmail.com",
+          "description": "Fixed-scope spreadsheet cleanup, document extraction, website QA, workflow documentation, and local automation services.",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": "spartan337.ops@gmail.com"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://spartan337ops.github.io/#website",
+          "name": "SPARTAN Ops",
+          "url": "https://spartan337ops.github.io/",
+          "publisher": {
+            "@id": "https://spartan337ops.github.io/#organization"
+          },
+          "description": "Practical data and operations services with written scope and fixed-price confirmation before work begins."
+        }
+      ]
+    }
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #08131d;
+      --surface: #0d1b27;
+      --surface-raised: #132534;
+      --surface-soft: #192f3e;
+      --text: #f4efe6;
+      --muted: #b9c2c7;
+      --line: #304756;
+      --accent: #69d5e7;
+      --accent-ink: #06131c;
+      --copper: #c98a5b;
+      --copper-light: #efb27b;
+      --success: #74d3aa;
+      --warning: #e7ad6d;
+      --danger: #ff9c9c;
+      --focus: #ffe19a;
+      --shadow: 0 26px 72px rgba(0, 0, 0, 0.34);
+      --radius: 14px;
+      --radius-small: 10px;
+      --max: 1240px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 82% 2%, rgba(105, 213, 231, 0.1), transparent 28rem),
+        radial-gradient(circle at 8% 28%, rgba(201, 138, 91, 0.07), transparent 24rem),
+        linear-gradient(180deg, #091722 0%, var(--bg) 28rem);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 1rem;
+      line-height: 1.58;
+      overflow-wrap: anywhere;
+    }
+
+    a {
+      color: var(--accent);
+      text-underline-offset: 0.2em;
+      text-decoration-thickness: 0.08em;
+    }
+
+    a:hover {
+      color: #b7ecfb;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a,
+    summary,
+    input,
+    select,
+    textarea {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    input[type="date"]:focus,
+    input[type="date"]:focus-within {
+      outline: 3px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 12px;
+      left: 12px;
+      transform: translateY(-180%);
+      padding: 12px 18px;
+      border-radius: var(--radius-small);
+      color: var(--accent-ink);
+      background: var(--focus);
+      font-weight: 800;
+      transition: transform 120ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .preview-banner {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 20px;
+      border-bottom: 1px solid rgba(231, 173, 109, 0.42);
+      color: #f4d6b8;
+      background: #241b16;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-align: center;
+    }
+
+    .preview-banner::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--copper-light);
+      box-shadow: 0 0 0 4px rgba(201, 138, 91, 0.14);
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 40;
+      top: 0;
+      border-bottom: 1px solid rgba(49, 80, 106, 0.86);
+      background: rgba(7, 17, 31, 0.94);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-shell {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      padding-block: 12px;
+    }
+
+    .brand {
+      display: inline-flex;
+      flex: 0 0 auto;
+      gap: 11px;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(118, 215, 245, 0.65);
+      border-radius: 11px;
+      color: var(--accent);
+      background: rgba(118, 215, 245, 0.08);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+    }
+
+    .brand-copy {
+      display: grid;
+      line-height: 1.12;
+    }
+
+    .brand-copy strong {
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-copy span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .nav-links {
+      display: flex;
+      flex: 1 1 auto;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      min-height: 44px;
+      padding: 11px 10px;
+      color: var(--muted);
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(118, 215, 245, 0.08);
+    }
+
+    .nav-menu {
+      display: contents;
+    }
+
+    .nav-toggle {
+      display: none;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      gap: 9px;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-small);
+      color: var(--accent-ink);
+      background: var(--accent);
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      color: var(--accent-ink);
+      background: #a7e8fa;
+    }
+
+    .button-secondary {
+      color: var(--text);
+      background: transparent;
+      border-color: var(--line);
+    }
+
+    .button-secondary:hover {
+      color: var(--text);
+      background: var(--surface-raised);
+    }
+
+    .button-small {
+      min-height: 44px;
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+    }
+
+    main:focus {
+      outline: none;
+    }
+
+    section {
+      padding-block: 82px;
+      scroll-margin-top: 92px;
+    }
+
+    main {
+      scroll-margin-top: 92px;
+    }
+
+    .section-compact {
+      padding-block: 64px;
+    }
+
+    .section-line {
+      border-top: 1px solid rgba(49, 80, 106, 0.56);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+      color: var(--text);
+      line-height: 1.08;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 22px;
+      font-size: clamp(2.7rem, 6.5vw, 5.4rem);
+      font-weight: 850;
+      letter-spacing: -0.055em;
+    }
+
+    h2 {
+      max-width: 18ch;
+      margin-bottom: 18px;
+      font-size: clamp(2rem, 4vw, 3.45rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      margin-bottom: 12px;
+      font-size: 1.24rem;
+      font-weight: 760;
+      letter-spacing: -0.018em;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    .lede {
+      max-width: 68ch;
+      color: var(--muted);
+      font-size: clamp(1.06rem, 2vw, 1.22rem);
+    }
+
+    .section-head {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .section-head .lede {
+      margin-bottom: 0;
+    }
+
+    .section-head {
+      max-width: 900px;
+      grid-template-columns: 1fr;
+    }
+
+    .count-card {
+      justify-self: end;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .count-card strong {
+      display: block;
+      color: var(--accent);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .count-card span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .hero {
+      min-height: calc(100vh - 114px);
+      display: grid;
+      align-items: center;
+      padding-block: 72px 88px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: clamp(34px, 6vw, 82px);
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+      align-items: center;
+    }
+
+    .hero-copy .lede {
+      max-width: 62ch;
+      margin-bottom: 24px;
+    }
+
+    .email-access {
+      max-width: 68ch;
+      margin: 26px 0;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-small) var(--radius-small) 0;
+      color: #dce9f3;
+      background: rgba(118, 215, 245, 0.08);
+    }
+
+    .email-access strong {
+      color: var(--accent);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .trust-strip {
+      display: flex;
+      gap: 10px;
+      margin: 30px 0 0;
+      padding: 0;
+      flex-wrap: wrap;
+      list-style: none;
+    }
+
+    .trust-strip li {
+      padding: 8px 11px;
+      border: 1px solid rgba(101, 224, 163, 0.38);
+      border-radius: 999px;
+      color: #bcf5d5;
+      background: rgba(101, 224, 163, 0.07);
+      font-size: 0.75rem;
+      font-weight: 750;
+    }
+
+    .scope-console {
+      position: relative;
+      padding: 28px;
+      border: 1px solid rgba(118, 215, 245, 0.38);
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(118, 215, 245, 0.08), transparent 44%),
+        var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .scope-console::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(118, 215, 245, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(118, 215, 245, 0.03) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mask-image: linear-gradient(to bottom, black, transparent 70%);
+    }
+
+    .console-head,
+    .console-row,
+    .console-foot {
+      position: relative;
+    }
+
+    .console-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .console-head strong {
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+    }
+
+    .local-chip {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      color: #fff1bc;
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+    }
+
+    .local-chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+    }
+
+    .console-list {
+      display: grid;
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .console-row {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 30px minmax(0, 1fr);
+      align-items: center;
+      padding: 12px;
+      border: 1px solid rgba(49, 80, 106, 0.75);
+      border-radius: 11px;
+      background: rgba(18, 39, 59, 0.76);
+    }
+
+    .console-number {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      color: var(--accent);
+      background: rgba(118, 215, 245, 0.1);
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .console-row strong {
+      display: block;
+      font-size: 0.87rem;
+    }
+
+    .console-row span:last-child {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .console-foot {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .service-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .proof-samples-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 30px;
+    }
+
+    .proof-sample {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(19, 37, 52, 0.98), rgba(8, 19, 29, 0.98));
+    }
+
+    .synthetic-label {
+      display: inline-flex;
+      padding: 6px 9px;
+      border: 1px solid rgba(231, 173, 109, 0.6);
+      border-radius: 999px;
+      color: #ffdfb8;
+      background: rgba(231, 173, 109, 0.08);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-sample h3 {
+      margin: 16px 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .proof-sample > p {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .sample-code,
+    .sample-findings,
+    .sample-checklist {
+      margin: 16px 0 0;
+      padding: 15px;
+      border: 1px solid rgba(105, 213, 231, 0.22);
+      border-radius: var(--radius-small);
+      color: #dce7f1;
+      background: rgba(4, 13, 21, 0.78);
+      font-size: 0.77rem;
+    }
+
+    .sample-code {
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .sample-findings,
+    .sample-checklist {
+      padding-left: 34px;
+    }
+
+    .sample-findings li + li,
+    .sample-checklist li + li {
+      margin-top: 8px;
+    }
+
+    .sample-disclosure {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--copper-light);
+      color: #eadfce;
+      background: rgba(201, 138, 91, 0.07);
+      font-size: 0.86rem;
+    }
+
+    .service-card {
+      display: flex;
+      min-width: 0;
+      min-height: 100%;
+      flex-direction: column;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(18, 39, 59, 0.96), rgba(13, 27, 42, 0.96));
+    }
+
+    .service-card:hover {
+      border-color: rgba(118, 215, 245, 0.55);
+    }
+
+    .service-topline {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .service-number {
+      color: var(--accent);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+    }
+
+    .price-chip {
+      padding: 6px 9px;
+      border: 1px solid rgba(255, 209, 102, 0.38);
+      border-radius: 999px;
+      color: #ffeba8;
+      background: rgba(255, 209, 102, 0.06);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .service-card > p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .service-meta {
+      display: grid;
+      gap: 10px;
+      margin: 2px 0 16px;
+      padding: 14px 0;
+      border-block: 1px solid rgba(49, 80, 106, 0.64);
+    }
+
+    .service-meta div {
+      display: grid;
+      gap: 3px;
+      grid-template-columns: 82px minmax(0, 1fr);
+    }
+
+    .service-meta dt {
+      color: var(--accent);
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .service-meta dd {
+      margin: 0;
+      color: #dce7f1;
+      font-size: 0.83rem;
+    }
+
+    .service-card h4 {
+      margin: 4px 0 7px;
+      color: var(--text);
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .compact-list {
+      margin: 0 0 14px;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .compact-list li + li {
+      margin-top: 4px;
+    }
+
+    .boundary {
+      margin-top: auto;
+      padding: 12px;
+      border-left: 3px solid var(--warning);
+      border-radius: 0 8px 8px 0;
+      color: #e7dfc2;
+      background: rgba(255, 209, 102, 0.055);
+      font-size: 0.79rem;
+    }
+
+    .service-cta {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .process-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin: 32px 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: process;
+    }
+
+    .process-grid li {
+      position: relative;
+      min-width: 0;
+      padding: 22px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      counter-increment: process;
+    }
+
+    .process-grid li::before {
+      content: "0" counter(process);
+      display: block;
+      margin-bottom: 22px;
+      color: var(--accent);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    .process-grid strong {
+      display: block;
+      margin-bottom: 9px;
+      line-height: 1.25;
+    }
+
+    .process-grid span {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .standards-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 32px;
+    }
+
+    .standard-card {
+      min-width: 0;
+      padding: 22px 18px;
+      border: 1px solid rgba(255, 209, 102, 0.35);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 209, 102, 0.07), var(--surface));
+    }
+
+    .standard-card strong {
+      display: block;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .standard-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .disclosure {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border: 1px solid var(--warning);
+      border-radius: var(--radius);
+      color: #fff1bc;
+      background: rgba(255, 209, 102, 0.07);
+      font-weight: 800;
+    }
+
+    .disclosure p {
+      margin: 0;
+    }
+
+    .table-shell {
+      overflow-x: auto;
+      margin-top: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 17px 20px;
+      border-bottom: 1px solid rgba(49, 80, 106, 0.62);
+      text-align: left;
+    }
+
+    th {
+      color: var(--accent);
+      background: var(--surface-raised);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    td:last-child {
+      color: #fff1bc;
+      font-weight: 800;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .pricing-note {
+      margin-top: 18px;
+      color: var(--muted);
+    }
+
+    .boundary-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 30px;
+    }
+
+    .boundary-panel {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .boundary-panel.safe {
+      border-top: 4px solid var(--success);
+    }
+
+    .boundary-panel.stop {
+      border-top: 4px solid var(--warning);
+    }
+
+    .boundary-panel ul {
+      margin-bottom: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .boundary-panel li + li {
+      margin-top: 8px;
+    }
+
+    .privacy-notice {
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid rgba(118, 215, 245, 0.45);
+      border-radius: var(--radius);
+      background: rgba(118, 215, 245, 0.07);
+    }
+
+    .privacy-notice strong {
+      color: var(--accent);
+    }
+
+    .privacy-notice p:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface);
+    }
+
+    summary {
+      min-height: 56px;
+      padding: 16px 50px 16px 18px;
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 760;
+    }
+
+    details[open] summary {
+      border-bottom: 1px solid var(--line);
+      color: var(--accent);
+    }
+
+    .faq-answer {
+      max-width: 78ch;
+      padding: 18px;
+      color: var(--muted);
+    }
+
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quote-grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      align-items: start;
+      margin-top: 32px;
+    }
+
+    .quote-form,
+    .next-panel {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .quote-form {
+      box-shadow: var(--shadow);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field-wide {
+      grid-column: 1 / -1;
+    }
+
+    label,
+    legend {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text);
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .required {
+      color: var(--warning);
+    }
+
+    .helper {
+      display: block;
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 12px;
+      border: 1px solid #45647c;
+      border-radius: var(--radius-small);
+      color: var(--text);
+      background: var(--surface-raised);
+    }
+
+    input[type="file"] {
+      min-height: 54px;
+      padding: 9px;
+      font-size: 0.82rem;
+    }
+
+    input[type="checkbox"] {
+      width: 21px;
+      min-height: 21px;
+      margin: 2px 0 0;
+      accent-color: var(--accent);
+    }
+
+    textarea {
+      min-height: 144px;
+      resize: vertical;
+    }
+
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: var(--accent);
+    }
+
+    [aria-invalid="true"] {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 2px rgba(255, 156, 156, 0.12);
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+    }
+
+    .sample-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .check-row {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 22px minmax(0, 1fr);
+      align-items: start;
+      padding: 16px;
+      border: 1px solid rgba(255, 209, 102, 0.35);
+      border-radius: var(--radius-small);
+      background: rgba(255, 209, 102, 0.05);
+    }
+
+    .check-row label {
+      margin: 0;
+      font-weight: 650;
+    }
+
+    .error-text {
+      margin: 8px 0 0;
+      color: var(--danger);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .form-status {
+      min-height: 56px;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+      color: var(--muted);
+      background: var(--surface-raised);
+    }
+
+    .form-status.complete {
+      color: #c6f7dc;
+      border-color: rgba(101, 224, 163, 0.58);
+      background: rgba(101, 224, 163, 0.07);
+    }
+
+    .form-status.error {
+      color: #ffd0d0;
+      border-color: rgba(255, 156, 156, 0.58);
+      background: rgba(255, 156, 156, 0.07);
+    }
+
+    .next-panel {
+      position: sticky;
+      top: 100px;
+    }
+
+    .next-list {
+      display: grid;
+      gap: 16px;
+      margin: 22px 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: next;
+    }
+
+    .next-list li {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 32px minmax(0, 1fr);
+      align-items: start;
+      color: var(--muted);
+      counter-increment: next;
+    }
+
+    .next-list li::before {
+      content: counter(next);
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--accent);
+      background: var(--surface-raised);
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    .email-fallback {
+      padding: 16px;
+      border: 1px solid rgba(118, 215, 245, 0.4);
+      border-radius: var(--radius-small);
+      background: rgba(118, 215, 245, 0.06);
+    }
+
+    .email-fallback strong {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .email-fallback p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer {
+      padding-block: 44px;
+      border-top: 1px solid var(--line);
+      background: #06101c;
+    }
+
+    .footer-grid {
+      display: grid;
+      gap: 30px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .footer-copy {
+      max-width: 70ch;
+      color: var(--muted);
+    }
+
+    .footer-copy strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .footer-copy p {
+      margin-bottom: 8px;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+      text-align: right;
+    }
+
+    /* WSA-E2 premium conversion refinement */
+    .site-header {
+      border-color: rgba(48, 71, 86, 0.78);
+      background: rgba(8, 19, 29, 0.92);
+    }
+
+    .brand-mark {
+      border-color: rgba(105, 213, 231, 0.5);
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(105, 213, 231, 0.14), rgba(201, 138, 91, 0.08));
+      box-shadow: inset 0 0 0 1px rgba(244, 239, 230, 0.04);
+    }
+
+    .brand-copy strong {
+      font-size: 0.93rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .nav-links a,
+    .button,
+    .service-card,
+    .path-card,
+    details {
+      transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease,
+        box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(105, 213, 231, 0.08);
+    }
+
+    .button {
+      border-color: var(--copper-light);
+      color: #10171b;
+      background: linear-gradient(135deg, #f2bd88, #d99560);
+      box-shadow: 0 12px 30px rgba(201, 138, 91, 0.16);
+    }
+
+    .button:hover {
+      color: #08131d;
+      background: linear-gradient(135deg, #ffd0a3, #e8a872);
+      box-shadow: 0 14px 34px rgba(201, 138, 91, 0.24);
+      transform: translateY(-2px);
+    }
+
+    .button-secondary {
+      border-color: rgba(105, 213, 231, 0.5);
+      color: var(--text);
+      background: rgba(105, 213, 231, 0.04);
+      box-shadow: none;
+    }
+
+    .button-secondary:hover {
+      color: var(--text);
+      background: rgba(105, 213, 231, 0.11);
+    }
+
+    h1,
+    h2 {
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 12.5ch;
+      font-size: clamp(3rem, 6.3vw, 5.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.058em;
+    }
+
+    h2 {
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      letter-spacing: 0.15em;
+    }
+
+    .hero {
+      position: relative;
+      min-height: min(850px, calc(100vh - 114px));
+      overflow: hidden;
+    }
+
+    .hero::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(105, 213, 231, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(105, 213, 231, 0.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 86%);
+    }
+
+    .hero-grid,
+    .hero-copy {
+      position: relative;
+    }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.24fr) minmax(340px, 0.76fr);
+    }
+
+    .hero-copy .lede {
+      max-width: 57ch;
+      margin-bottom: 22px;
+      color: #c6ced1;
+      font-size: clamp(1.08rem, 1.8vw, 1.28rem);
+    }
+
+    .hero-offer {
+      display: grid;
+      max-width: 640px;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin: 26px 0;
+      padding: 17px 18px;
+      border-block: 1px solid rgba(48, 71, 86, 0.8);
+    }
+
+    .offer-price {
+      padding-right: 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .offer-price span,
+    .offer-note span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .offer-price strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--copper-light);
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      font-size: 2.25rem;
+      line-height: 1;
+    }
+
+    .offer-note strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.9rem;
+      line-height: 1.42;
+    }
+
+    .email-access {
+      margin: 24px 0;
+      padding: 14px 17px;
+      border-left-color: var(--copper);
+      color: #d7dddf;
+      background: rgba(201, 138, 91, 0.07);
+      font-size: 0.89rem;
+    }
+
+    .email-access strong {
+      color: var(--copper-light);
+    }
+
+    .trust-strip {
+      display: grid;
+      max-width: 690px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 32px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .trust-strip li {
+      min-width: 0;
+      padding: 12px 11px;
+      border: 0;
+      border-radius: 0;
+      color: #ccefe8;
+      background: #0d1b27;
+      font-size: 0.71rem;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .scope-console {
+      border-color: rgba(105, 213, 231, 0.32);
+      border-radius: 10px;
+      background:
+        linear-gradient(145deg, rgba(105, 213, 231, 0.08), transparent 44%),
+        linear-gradient(180deg, #112432, #0b1924);
+    }
+
+    .scope-console::after {
+      position: absolute;
+      top: 0;
+      left: 24px;
+      width: 76px;
+      height: 3px;
+      content: "";
+      background: linear-gradient(90deg, var(--accent), var(--copper-light));
+    }
+
+    .console-price {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+      margin: 20px 0 12px;
+      padding: 17px;
+      border: 1px solid rgba(201, 138, 91, 0.34);
+      background: rgba(201, 138, 91, 0.06);
+    }
+
+    .console-price span,
+    .console-price small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .console-price span {
+      margin-bottom: 4px;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .console-price strong {
+      color: var(--copper-light);
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      font-size: 2.5rem;
+      line-height: 0.9;
+    }
+
+    .console-row {
+      border-color: rgba(48, 71, 86, 0.8);
+      border-radius: 7px;
+      background: rgba(19, 37, 52, 0.78);
+    }
+
+    .buying-paths {
+      position: relative;
+      background: linear-gradient(180deg, rgba(19, 37, 52, 0.36), transparent 88%);
+    }
+
+    .path-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .path-card {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: 100%;
+      flex-direction: column;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(19, 37, 52, 0.98), rgba(13, 27, 39, 0.98));
+      overflow: hidden;
+    }
+
+    .path-card::before {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      content: "";
+      background: linear-gradient(90deg, var(--accent), transparent 72%);
+    }
+
+    .path-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--copper-light), transparent 72%);
+    }
+
+    .path-card:hover {
+      border-color: rgba(105, 213, 231, 0.48);
+      box-shadow: 0 20px 46px rgba(0, 0, 0, 0.22);
+      transform: translateY(-3px);
+    }
+
+    .path-code {
+      margin-bottom: 22px;
+      color: var(--accent);
+      font-size: 0.71rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .path-card:nth-child(2) .path-code {
+      color: var(--copper-light);
+    }
+
+    .path-card h3 {
+      max-width: 15ch;
+      margin-bottom: 13px;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      font-size: clamp(1.55rem, 2.3vw, 2.05rem);
+      line-height: 1.08;
+    }
+
+    .path-card > p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .path-list {
+      margin: 8px 0 24px;
+      padding: 0;
+      color: #d6dddf;
+      list-style: none;
+      font-size: 0.84rem;
+    }
+
+    .path-list li {
+      position: relative;
+      padding: 9px 0 9px 18px;
+      border-bottom: 1px solid rgba(48, 71, 86, 0.62);
+    }
+
+    .path-list li::before {
+      position: absolute;
+      top: 1.03rem;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      content: "";
+      background: var(--accent);
+    }
+
+    .path-card:nth-child(2) .path-list li::before {
+      background: var(--copper-light);
+    }
+
+    .path-footer {
+      display: flex;
+      gap: 14px;
+      align-items: end;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .path-price span,
+    .path-price strong {
+      display: block;
+    }
+
+    .path-price span {
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .path-price strong {
+      margin-top: 4px;
+      color: var(--copper-light);
+      font-size: 1.02rem;
+    }
+
+    .path-link {
+      font-size: 0.8rem;
+      font-weight: 850;
+    }
+
+    .confidence-rail {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .confidence-item {
+      min-width: 0;
+      padding: 16px;
+      background: #0c1924;
+    }
+
+    .confidence-item strong,
+    .confidence-item span {
+      display: block;
+    }
+
+    .confidence-item strong {
+      margin-bottom: 5px;
+      color: var(--text);
+      font-size: 0.78rem;
+    }
+
+    .confidence-item span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      line-height: 1.42;
+    }
+
+    .service-grid {
+      gap: 20px;
+    }
+
+    .service-card {
+      position: relative;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(19, 37, 52, 0.96), rgba(12, 25, 36, 0.98));
+      box-shadow: inset 0 1px 0 rgba(244, 239, 230, 0.025);
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 2px;
+      content: "";
+      background: linear-gradient(90deg, rgba(105, 213, 231, 0.78), transparent 64%);
+      opacity: 0.62;
+    }
+
+    .service-card:hover {
+      border-color: rgba(105, 213, 231, 0.46);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .price-chip {
+      border-color: rgba(201, 138, 91, 0.46);
+      color: #f2c498;
+      background: rgba(201, 138, 91, 0.08);
+    }
+
+    .service-card > p:first-of-type::before {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--accent);
+      content: "Result";
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .boundary {
+      border-left-color: var(--copper);
+      color: #ded4ca;
+      background: rgba(201, 138, 91, 0.055);
+    }
+
+    .service-cta {
+      min-height: 46px;
+      justify-content: space-between;
+      padding: 11px 13px;
+      border: 1px solid rgba(105, 213, 231, 0.34);
+      border-radius: 7px;
+      color: #bdeef5;
+      background: rgba(105, 213, 231, 0.05);
+      text-decoration: none;
+    }
+
+    .service-cta::after {
+      content: "\2192";
+      font-size: 1.1rem;
+    }
+
+    .service-cta:hover {
+      color: var(--text);
+      border-color: rgba(105, 213, 231, 0.68);
+      background: rgba(105, 213, 231, 0.1);
+    }
+
+    .process-grid li,
+    .standard-card,
+    .boundary-panel,
+    details,
+    .quote-form,
+    .next-panel,
+    .table-shell {
+      border-radius: 9px;
+    }
+
+    .process-grid li {
+      background: linear-gradient(180deg, rgba(19, 37, 52, 0.92), rgba(13, 27, 39, 0.96));
+    }
+
+    .process-grid li::before {
+      color: var(--copper-light);
+    }
+
+    .standard-card {
+      border-color: rgba(201, 138, 91, 0.34);
+      background: linear-gradient(180deg, rgba(201, 138, 91, 0.07), var(--surface));
+    }
+
+    td:last-child {
+      color: var(--copper-light);
+    }
+
+    .disclosure {
+      border-color: rgba(201, 138, 91, 0.62);
+      color: #f4d6b8;
+      background: rgba(201, 138, 91, 0.075);
+    }
+
+    details:hover {
+      border-color: rgba(105, 213, 231, 0.42);
+    }
+
+    .quote-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .quote-heading .lede {
+      margin-bottom: 0;
+    }
+
+    .quote-assurances {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .quote-assurance {
+      padding: 15px 16px;
+      border: 1px solid rgba(48, 71, 86, 0.82);
+      background: rgba(19, 37, 52, 0.58);
+    }
+
+    .quote-assurance strong,
+    .quote-assurance span {
+      display: block;
+    }
+
+    .quote-assurance strong {
+      margin-bottom: 4px;
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+
+    .quote-assurance span {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .quote-form {
+      border-color: rgba(105, 213, 231, 0.3);
+      background: linear-gradient(180deg, #102230, #0c1a25);
+    }
+
+    .next-panel {
+      border-top: 3px solid var(--copper);
+      background: linear-gradient(180deg, rgba(201, 138, 91, 0.06), var(--surface));
+    }
+
+    .early-pricing {
+      padding-block: 28px;
+      border-top: 1px solid rgba(48, 71, 86, 0.72);
+      border-bottom: 1px solid rgba(48, 71, 86, 0.72);
+      background: rgba(19, 37, 52, 0.5);
+    }
+
+    .early-pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .early-price {
+      display: block;
+      min-width: 0;
+      padding: 14px;
+      color: inherit;
+      text-decoration: none;
+      background: #0c1924;
+      transition: background-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .early-price:hover {
+      background: #142b3b;
+      box-shadow: inset 0 -3px 0 var(--copper);
+    }
+
+    .early-price span,
+    .early-price strong {
+      display: block;
+    }
+
+    .early-price span {
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.35;
+    }
+
+    .early-price strong {
+      margin-top: 4px;
+      color: var(--copper-light);
+      font-size: 0.88rem;
+    }
+
+    .early-pricing .pricing-note {
+      margin-bottom: 0;
+      font-size: 0.82rem;
+    }
+
+    .service-card {
+      padding: 0;
+    }
+
+    .service-details {
+      min-height: 100%;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .service-summary {
+      position: relative;
+      min-height: 100%;
+      padding: 22px 56px 22px 22px;
+      list-style: none;
+    }
+
+    .service-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .service-summary::after {
+      position: absolute;
+      right: 20px;
+      bottom: 22px;
+      color: var(--accent);
+      content: "+";
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .service-details[open] .service-summary::after {
+      content: "\2212";
+    }
+
+    .service-summary:hover {
+      color: var(--text);
+      background: rgba(105, 213, 231, 0.04);
+    }
+
+    .service-summary h3 {
+      margin-bottom: 9px;
+    }
+
+    .service-summary > p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .service-summary > p::before {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      content: "Outcome";
+      font-size: 0.64rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .detail-control-label {
+      display: block;
+      margin-top: 14px;
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .service-detail-body {
+      padding: 0 22px 22px;
+      border-top: 1px solid rgba(48, 71, 86, 0.72);
+    }
+
+    .service-detail-body .service-meta {
+      margin-top: 18px;
+    }
+
+    .commitment-marker {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 30px;
+      margin-bottom: 17px;
+      border: 1px solid rgba(105, 213, 231, 0.38);
+      color: var(--accent);
+      background: rgba(105, 213, 231, 0.06);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .disabled-submit,
+    .disabled-submit:hover {
+      color: #d6c8bb;
+      border-color: rgba(201, 138, 91, 0.38);
+      background: rgba(201, 138, 91, 0.09);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @media (max-width: 1099px) {
+      .nav-shell {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+      }
+
+      .service-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-samples-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .path-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .path-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .confidence-rail {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .early-pricing-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .process-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .standards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .standard-card:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .hero {
+        min-height: 0;
+      }
+
+      .hero-grid,
+      .section-head,
+      .quote-grid,
+      .quote-heading {
+        grid-template-columns: 1fr;
+      }
+
+      .count-card {
+        justify-self: start;
+      }
+
+      .scope-console {
+        max-width: 650px;
+      }
+
+      .next-panel {
+        position: static;
+      }
+
+      .process-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .trust-strip,
+      .quote-assurances {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 719px) {
+      .container {
+        width: min(calc(100% - 28px), var(--max));
+      }
+
+      .preview-banner {
+        min-height: 28px;
+        padding-inline: 12px;
+        font-size: 0.62rem;
+        letter-spacing: 0.065em;
+      }
+
+      .site-header {
+        position: sticky;
+      }
+
+      .nav-shell {
+        display: grid;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+        padding-block: 9px 11px;
+      }
+
+      .brand-copy span {
+        max-width: 27ch;
+        font-size: 0.66rem;
+      }
+
+      .button-small {
+        grid-row: 2;
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .nav-menu {
+        display: contents;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+        min-width: 64px;
+        min-height: 44px;
+        grid-row: 1;
+        grid-column: 2;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        background: var(--surface);
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 800;
+        list-style: none;
+      }
+
+      .nav-toggle::-webkit-details-marker {
+        display: none;
+      }
+
+      .nav-menu:not([open]) > .nav-links {
+        display: none;
+      }
+
+      .nav-links {
+        display: grid;
+        grid-row: 3;
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        width: 100%;
+        padding-top: 2px;
+      }
+
+      .nav-links a {
+        display: grid;
+        place-items: center;
+        padding-inline: 8px;
+        font-size: 0.78rem;
+        text-align: center;
+      }
+
+      section {
+        padding-block: 58px;
+        scroll-margin-top: 142px;
+      }
+
+      main {
+        scroll-margin-top: 142px;
+      }
+
+      .hero {
+        padding-block: 38px 56px;
+      }
+
+      h1 {
+        font-size: clamp(2.28rem, 11.5vw, 3.45rem);
+      }
+
+      .button-row,
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .button-row .button,
+      .form-actions .button {
+        width: 100%;
+      }
+
+      .service-grid,
+      .proof-samples-grid,
+      .path-grid,
+      .process-grid,
+      .standards-grid,
+      .boundary-grid,
+      .form-grid,
+      .sample-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .path-card:last-child,
+      .standard-card:last-child,
+      .field-wide {
+        grid-column: auto;
+      }
+
+      .hero-offer {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .offer-price {
+        padding: 0 0 12px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .trust-strip,
+      .confidence-rail,
+      .quote-assurances {
+        grid-template-columns: 1fr;
+      }
+
+      .early-pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .service-summary {
+        padding: 19px 48px 19px 18px;
+      }
+
+      .service-detail-body {
+        padding: 0 18px 18px;
+      }
+
+      .trust-strip li {
+        text-align: left;
+      }
+
+      .path-card,
+      .quote-form,
+      .next-panel,
+      .boundary-panel {
+        padding: 20px;
+      }
+
+      .footer-links {
+        justify-items: start;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        width: min(calc(100% - 20px), var(--max));
+      }
+
+      .scope-console {
+        padding: 20px;
+      }
+
+      .nav-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nav-links a:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .path-footer {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .path-card,
+      .quote-form,
+      .next-panel,
+      .boundary-panel {
+        padding: 17px;
+      }
+
+      .service-meta div {
+        grid-template-columns: 1fr;
+      }
+
+      .early-pricing-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+
+    @media print {
+      .preview-banner,
+      .site-header,
+      .button,
+      .quote-form {
+        display: none !important;
+      }
+
+      body {
+        color: #111;
+        background: #fff;
+      }
+
+      .service-card,
+      .standard-card,
+      .boundary-panel,
+      details {
+        color: #111;
+        background: #fff;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <div class="preview-banner" id="site-mode-banner" role="status" aria-label="Website mode status">
+    LOCAL PREVIEW • NOT PUBLISHED • NO DATA SENT
+  </div>
+
+  <header class="site-header" id="home">
+    <nav class="container nav-shell" aria-label="Primary">
+      <a class="brand" href="#home" aria-label="SPARTAN Ops home">
+        <span class="brand-mark" aria-hidden="true">S337</span>
+        <span class="brand-copy">
+          <strong>SPARTAN Ops</strong>
+          <span>Spreadsheet, document, website QA, and workflow services</span>
+        </span>
+      </a>
+
+      <details class="nav-menu">
+        <summary class="nav-toggle" aria-expanded="false">Menu</summary>
+        <div class="nav-links" id="primary-nav">
+          <a href="#paths">Ways We Help</a>
+          <a href="#services">Services</a>
+          <a href="#samples">Samples</a>
+          <a href="#process">Process</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
         </div>
-      </header>
+      </details>
 
-      <section class="hero" id="top">
-        <div class="hero-grid" aria-hidden="true"></div>
-        <div class="shell hero-layout">
-          <div class="hero-copy">
-            <p class="eyebrow">
-              <span class="signal-dot"></span> Phoenix + Tempe · Remote available
-            </p>
-            <h1>
-              Small computer and data jobs,
-              <span> handled professionally.</span>
-            </h1>
-            <p class="hero-lede">
-              Fast, fixed-scope spreadsheet cleanup, website QA, document
-              extraction, and small automation—with clear deliverables you can
-              review before payment is requested.
-            </p>
-            <div class="hero-actions">
-              <a
-                class="button button-solid"
-                href="mailto:spartan337.ops@gmail.com?subject=Fixed-scope%20service%20request&amp;body=Hi%20Nicholas%2C%0A%0AI%20need%20help%20with%3A%0A%0AThe%20result%20I%20need%20is%3A%0A%0AI%20can%20share%20this%20public%20URL%20or%20redacted%20sample%3A%0A"
-              >
-                Email a redacted sample
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a class="button button-ghost" href="#services">
-                View fixed-price services
-              </a>
-            </div>
-            <p class="microcopy">
-              Start with one public URL or redacted sample. Please do not send
-              passwords or sensitive personal or financial information.
-            </p>
-          </div>
+      <a class="button button-small" href="#quote">Request a Written Quote</a>
+    </nav>
+  </header>
 
-          <div class="scope-console" aria-label="Example project workflow">
-            <div class="console-topline">
-              <span>FIXED-SCOPE WORKFLOW</span>
-              <span class="console-status">
-                <i></i> HUMAN SUPERVISED
-              </span>
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow service-descriptor">Fixed-scope spreadsheet, document, website QA, workflow, and local automation services.</p>
+          <h1 id="hero-title">Turn messy business work into clear, usable deliverables.</h1>
+          <p class="lede">
+            Clean spreadsheets, organize documents, find public website issues, document workflows,
+            and build small local tools. You get a written scope, fixed-price confirmation, and
+            reviewable delivery. No call required.
+          </p>
+
+          <div class="hero-offer" aria-label="Starting price and scope commitment">
+            <div class="offer-price">
+              <span>Small projects from</span>
+              <strong>$75</strong>
             </div>
-            <div class="console-body">
-              <p class="console-label">A clean handoff, every time</p>
-              <h2>Sample → scope → useful delivery</h2>
-              <div class="scope-flow">
-                <div>
-                  <span>INPUT</span>
-                  <strong>Redacted sample</strong>
-                </div>
-                <b aria-hidden="true">→</b>
-                <div>
-                  <span>AGREEMENT</span>
-                  <strong>Exact scope</strong>
-                </div>
-                <b aria-hidden="true">→</b>
-                <div>
-                  <span>OUTPUT</span>
-                  <strong>Reviewable files</strong>
-                </div>
-              </div>
-              <div class="console-rules">
-                <p>
-                  <span>PRICE</span>
-                  <strong>Fixed before work</strong>
-                </p>
-                <p>
-                  <span>PAYMENT</span>
-                  <strong>After approved delivery</strong>
-                </p>
-                <p>
-                  <span>ACCESS</span>
-                  <strong>Minimum data needed</strong>
-                </p>
-              </div>
-            </div>
-            <div class="console-footer">
-              <span>LOCAL-FIRST WORKFLOW</span>
-              <span>APPROVAL CONTROLLED</span>
+            <div class="offer-note">
+              <span>Before work begins</span>
+              <strong>Written deliverables, fixed price, planning range, assumptions, and exclusions.</strong>
             </div>
           </div>
-        </div>
 
-        <div class="shell trust-strip" aria-label="Service commitments">
-          <span><i aria-hidden="true">✓</i> Fixed scope before work</span>
-          <span><i aria-hidden="true">✓</i> Human supervised</span>
-          <span><i aria-hidden="true">✓</i> Minimal-data workflow</span>
-          <span><i aria-hidden="true">✓</i> Payment after approved delivery</span>
-        </div>
-      </section>
-
-      <section class="section section-light" id="services">
-        <div class="shell">
-          <div class="section-heading split-heading">
-            <div>
-              <p class="kicker">FIXED-PRICE SERVICES</p>
-              <h2>Get one small job off your list.</h2>
-            </div>
-            <p>
-              Designed for narrow, practical tasks that need a clean result—not
-              a long contract or a vague technology package.
-            </p>
+          <div class="email-access">
+            <strong>No call required.</strong>
+            Email is fully supported from first request through delivery, keeping scope, price,
+            approvals, changes, blocked items, and handoff notes in one reviewable written path.
           </div>
 
-          <div class="service-grid">
-            <article class="service-card">
-              <div class="service-topline">
-                <span>DATA-01</span>
-                <span>45–90 min</span>
-              </div>
-              <h3>Spreadsheet cleanup</h3>
-              <p>
-                Up to 100 rows cleaned, normalized, and returned as a practical
-                CSV or XLSX file.
-              </p>
-              <div class="service-delivery">
-                <span>Clean file + change summary</span>
-                <strong>$35</strong>
-              </div>
-            </article>
-
-            <article class="service-card">
-              <div class="service-topline">
-                <span>WEB-02</span>
-                <span>1.5–3 hrs</span>
-              </div>
-              <h3>Website QA report</h3>
-              <p>
-                A focused review of up to five public pages with ranked issues
-                and clear reproduction steps.
-              </p>
-              <div class="service-delivery">
-                <span>Evidence + priority report</span>
-                <strong>$95</strong>
-              </div>
-            </article>
-
-            <article class="service-card">
-              <div class="service-topline">
-                <span>DOC-03</span>
-                <span>2–4 hrs</span>
-              </div>
-              <h3>PDF or text extraction</h3>
-              <p>
-                Relevant text or tables extracted from one confirmed document
-                set into structured output.
-              </p>
-              <div class="service-delivery">
-                <span>Structured CSV or XLSX</span>
-                <strong>$125</strong>
-              </div>
-            </article>
-
-            <article class="service-card">
-              <div class="service-topline">
-                <span>AUTO-04</span>
-                <span>2–4 hrs</span>
-              </div>
-              <h3>Small automation script</h3>
-              <p>
-                One bounded Python task for renaming files, cleaning CSVs,
-                parsing text, or extracting links.
-              </p>
-              <div class="service-delivery">
-                <span>Script + run instructions</span>
-                <strong>$150</strong>
-              </div>
-            </article>
+          <div class="button-row">
+            <a class="button" href="#quote">Request a Written Quote</a>
+            <a class="button button-secondary" href="#services">View Services</a>
           </div>
 
-          <div class="catalog-block">
-            <div class="catalog-title">
-              <div>
-                <p class="kicker">COMPLETE SERVICE MENU</p>
-                <h3>Transparent starting prices</h3>
-              </div>
-              <p>
-                Final scope and availability are confirmed in writing before
-                work begins.
-              </p>
-            </div>
-            <div class="catalog-table" role="table" aria-label="Service menu">
-              <div class="catalog-row catalog-header" role="row">
-                <span role="columnheader">Service</span>
-                <span role="columnheader">Delivery target</span>
-                <span role="columnheader">Price</span>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">Quick spreadsheet cleanup</strong>
-                <span role="cell">45–90 min</span>
-                <b role="cell">$35</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">File rename and folder cleanup</strong>
-                <span role="cell">45–120 min</span>
-                <b role="cell">$50</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">Prompt pack and SOP</strong>
-                <span role="cell">60–120 min</span>
-                <b role="cell">$65</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">Business data cleanup</strong>
-                <span role="cell">1.5–3 hrs</span>
-                <b role="cell">$75</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">Inventory CSV normalization</strong>
-                <span role="cell">1.5–3 hrs</span>
-                <b role="cell">$85</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">Website QA report</strong>
-                <span role="cell">1.5–3 hrs</span>
-                <b role="cell">$95</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">PDF or text extraction</strong>
-                <span role="cell">2–4 hrs</span>
-                <b role="cell">$125</b>
-              </div>
-              <div class="catalog-row" role="row">
-                <strong role="cell">Mini automation script</strong>
-                <span role="cell">2–4 hrs</span>
-                <b role="cell">$150</b>
-              </div>
-            </div>
-            <p class="catalog-note">
-              Same-day turnaround is available only when the scope and current
-              availability are confirmed.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-process" id="process">
-        <div class="shell">
-          <div class="section-heading process-heading">
-            <p class="kicker">HOW IT WORKS</p>
-            <h2>A clear process from sample to delivery.</h2>
-          </div>
-          <div class="process-grid">
-            <article class="process-step">
-              <span class="step-number">01</span>
-              <h3>Send one sample</h3>
-              <p>
-                Share a public URL, a redacted sample file, or 10–20 sample rows
-                and describe the result you need.
-              </p>
-            </article>
-            <article class="process-step">
-              <span class="step-number">02</span>
-              <h3>Receive an exact scope</h3>
-              <p>
-                You get the deliverables, fixed price, turnaround, acceptance
-                check, and revision boundary in writing.
-              </p>
-            </article>
-            <article class="process-step">
-              <span class="step-number">03</span>
-              <h3>Approve before work</h3>
-              <p>
-                Nothing starts until the scope is clear and you approve it. No
-                subscription or open-ended access is required.
-              </p>
-            </article>
-            <article class="process-step">
-              <span class="step-number">04</span>
-              <h3>Review the delivery</h3>
-              <p>
-                Inspect the finished files and supporting evidence. Payment is
-                requested only after you approve delivered service work.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-ink" id="boundaries">
-        <div class="shell boundaries-layout">
-          <div class="boundaries-copy">
-            <p class="kicker kicker-blue">DATA BOUNDARIES</p>
-            <h2>Your data stays inside the agreed scope.</h2>
-            <p>
-              A public page or redacted sample is preferred whenever possible.
-              SPARTAN supports intake, checking, delivery, and approvals through
-              a local-first, human-supervised workflow.
-            </p>
-            <div class="boundary-callout">
-              <span>INITIAL REVIEW</span>
-              <strong>No account access is needed.</strong>
-            </div>
-          </div>
-          <div class="boundary-grid">
-            <article>
-              <span class="boundary-icon boundary-safe" aria-hidden="true">✓</span>
-              <div>
-                <h3>Good to share</h3>
-                <p>
-                  Public URLs, redacted sample files, example rows, and a clear
-                  description of the outcome you need.
-                </p>
-              </div>
-            </article>
-            <article>
-              <span class="boundary-icon boundary-stop" aria-hidden="true">×</span>
-              <div>
-                <h3>Please do not share</h3>
-                <p>
-                  Passwords, SSN, banking, card, tax, health, or private
-                  customer information during initial review.
-                </p>
-              </div>
-            </article>
-            <article class="boundary-wide">
-              <span class="boundary-icon boundary-neutral" aria-hidden="true">◎</span>
-              <div>
-                <h3>Approval stays with you</h3>
-                <p>
-                  The workflow does not automatically send messages, publish
-                  content, make purchases, or access accounts. You approve the
-                  exact work and review the result.
-                </p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-light">
-        <div class="shell deliverables-layout">
-          <div>
-            <p class="kicker">WHAT YOU RECEIVE</p>
-            <h2>Professional proof instead of vague promises.</h2>
-            <p class="section-intro">
-              Every job is packaged so you can see what was done, check the
-              result, and use the deliverable immediately.
-            </p>
-          </div>
-          <ul class="deliverables-list">
-            <li><span>01</span><strong>Written scope and fixed price</strong></li>
-            <li><span>02</span><strong>Clearly named deliverable files</strong></li>
-            <li><span>03</span><strong>Evidence or structured output</strong></li>
-            <li><span>04</span><strong>One correction for scope mistakes</strong></li>
-            <li><span>05</span><strong>Practical handoff instructions</strong></li>
-            <li><span>06</span><strong>No surprise job expansion</strong></li>
+          <ul class="trust-strip" aria-label="Service safeguards">
+            <li>Scope first</li>
+            <li>Price confirmed first</li>
+            <li>Redacted sample accepted</li>
+            <li>Exceptions documented</li>
           </ul>
         </div>
-      </section>
 
-      <section class="section about-section">
-        <div class="shell about-layout">
-          <div class="about-mark" aria-hidden="true">
-            <span>S</span>
-            <small>337</small>
+        <aside class="scope-console" aria-label="Fixed-scope workflow summary">
+          <div class="console-head">
+            <strong>BUYING BRIEF</strong>
+            <span class="local-chip">WRITTEN FIRST</span>
           </div>
-          <div class="about-copy">
-            <p class="kicker">ABOUT SPARTAN OPS</p>
-            <h2>Practical support. Human judgment. Clear control.</h2>
-            <p>
-              SPARTAN Ops is Nicholas Brasseur's supervised workflow for small,
-              bounded computer and data tasks. It is built around useful
-              deliverables, visible evidence, and approval-controlled work—not
-              unattended activity or inflated claims.
+          <div class="console-price">
+            <div>
+              <span>Clear starting point</span>
+              <small>For a small, well-defined cleanup project</small>
+            </div>
+            <strong>$75</strong>
+          </div>
+          <div class="console-list">
+            <div class="console-row">
+              <span class="console-number">01</span>
+              <span><strong>Describe</strong><span>Send a safe sample or describe the problem.</span></span>
+            </div>
+            <div class="console-row">
+              <span class="console-number">02</span>
+              <span><strong>Receive the written scope</strong><span>Receive exact deliverables, price, and turnaround.</span></span>
+            </div>
+            <div class="console-row">
+              <span class="console-number">03</span>
+              <span><strong>Approve</strong><span>Approve the fixed scope.</span></span>
+            </div>
+            <div class="console-row">
+              <span class="console-number">04</span>
+              <span><strong>Work and quality check</strong><span>Work is completed and quality-checked.</span></span>
+            </div>
+            <div class="console-row">
+              <span class="console-number">05</span>
+              <span><strong>Receive the handoff</strong><span>Receive organized files and an issue summary.</span></span>
+            </div>
+          </div>
+          <p class="console-foot">
+            Initial review does not require account access. Final price depends on scope.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-line buying-paths" id="paths" aria-labelledby="paths-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Start with the business outcome</p>
+            <h2 id="paths-title">Three clear ways to move the work forward</h2>
+            <p class="lede">
+              Choose the closest outcome. The written quote will map the work to one service or
+              divide a larger request into reviewable milestones.
             </p>
           </div>
         </div>
-      </section>
 
-      <section class="final-cta" id="contact">
-        <div class="cta-grid" aria-hidden="true"></div>
-        <div class="shell final-cta-inner">
-          <p class="kicker kicker-blue">READY WHEN THE SCOPE IS</p>
-          <h2>Have one small job that needs to get done?</h2>
+        <div class="path-grid">
+          <article class="path-card">
+            <span class="path-code">Path 01 / Clean + Structure</span>
+            <h3>Make business data usable again.</h3>
+            <p>Turn inconsistent files, records, and catalogs into clean, organized working assets.</p>
+            <ul class="path-list">
+              <li>Spreadsheet, CSV, inventory, and SKU cleanup</li>
+              <li>Data entry and structured preparation</li>
+              <li>PDF, image, and document extraction</li>
+              <li>File and folder organization</li>
+            </ul>
+            <div class="path-footer">
+              <div class="path-price"><span>Selected work</span><strong>From $75</strong></div>
+              <a class="path-link" href="#services">See matching services</a>
+            </div>
+          </article>
+
+          <article class="path-card">
+            <span class="path-code">Path 02 / Review + Document</span>
+            <h3>Find gaps and make the work repeatable.</h3>
+            <p>Convert public-page, research, and operational questions into written findings and usable guidance.</p>
+            <ul class="path-list">
+              <li>Website QA and public-page review</li>
+              <li>SOPs, checklists, and workflow documentation</li>
+              <li>Research and competitor summaries</li>
+              <li>Reports, trackers, and lightweight dashboards</li>
+            </ul>
+            <div class="path-footer">
+              <div class="path-price"><span>Selected work</span><strong>From $95</strong></div>
+              <a class="path-link" href="#services">See matching services</a>
+            </div>
+          </article>
+
+          <article class="path-card">
+            <span class="path-code">Path 03 / Prepare + Automate</span>
+            <h3>Build a safer operating workflow.</h3>
+            <p>Prepare lists, systems, and local tools for controlled human review and repeat use.</p>
+            <ul class="path-list">
+              <li>Lead research and list preparation</li>
+              <li>CRM cleanup and migration preparation</li>
+              <li>Small Python scripts and local automation</li>
+              <li>Recurring administrative and data operations</li>
+            </ul>
+            <div class="path-footer">
+              <div class="path-price"><span>Selected work</span><strong>From $125</strong></div>
+              <a class="path-link" href="#services">See matching services</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="confidence-rail" aria-label="Buying confidence signals">
+          <div class="confidence-item"><strong>Written scope</strong><span>Know the deliverables before approval.</span></div>
+          <div class="confidence-item"><strong>Fixed price</strong><span>Confirmed for the approved scope.</span></div>
+          <div class="confidence-item"><strong>Safe first review</strong><span>Use a public URL or redacted sample.</span></div>
+          <div class="confidence-item"><strong>Visible boundaries</strong><span>Assumptions and exclusions stay explicit.</span></div>
+          <div class="confidence-item"><strong>Written handoff</strong><span>Changes and exceptions stay reviewable.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="early-pricing" aria-labelledby="early-pricing-title">
+      <div class="container">
+        <p class="eyebrow" id="early-pricing-title">Starting guidance at a glance</p>
+        <div class="early-pricing-grid">
+          <a class="early-price" href="#quote" data-select-service="Spreadsheet and CSV cleanup"><span>Spreadsheet / CSV cleanup</span><strong>From $75</strong></a>
+          <a class="early-price" href="#quote" data-select-service="Website QA and public-page review"><span>Website QA</span><strong>From $95</strong></a>
+          <a class="early-price" href="#quote" data-select-service="PDF, image, and document extraction"><span>Document extraction</span><strong>From $125</strong></a>
+          <a class="early-price" href="#quote" data-select-service="SOPs, checklists, and workflow documentation"><span>Workflow documentation</span><strong>From $125</strong></a>
+          <a class="early-price" href="#quote" data-select-service="Small Python scripts and local automation"><span>Local automation</span><strong>From $150</strong></a>
+          <a class="early-price" href="#quote" data-select-service="Recurring administrative and data-operations support"><span>Recurring operations</span><strong>From $400/month</strong></a>
+        </div>
+        <p class="pricing-note">Choose a starting point to prefill the written request. Final fixed price depends on scope, file condition, volume, complexity, and deadline. <a href="#pricing">See full pricing guidance</a>.</p>
+      </div>
+    </section>
+
+    <section class="section-line" id="services" aria-labelledby="services-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">13 verified service groups</p>
+            <h2 id="services-title">Choose the exact result you need</h2>
+            <p class="lede">
+              Every service shows the intended result, inputs, planning range, deliverables,
+              starting guidance, and boundary. Mixed work is divided into fixed milestones.
+            </p>
+          </div>
+        </div>
+
+        <div class="service-grid">
+          <article class="service-card" data-service="Spreadsheet and CSV cleanup">
+            <details class="service-details" id="service-01">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 01</span><span class="price-chip">From $75</span></div>
+                <h3>Spreadsheet and CSV cleanup</h3>
+                <p>Clean, normalize, deduplicate, and reorganize spreadsheet data.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>1–3 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Excel, CSV, TSV, rules, or a redacted sample</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Clean file in the agreed format</li><li>Change and exception summary</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No accounting advice, invented values, or live-system import by default.</p>
+                <a class="service-cta" href="#quote" data-select-service="Spreadsheet and CSV cleanup">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Data entry and structured data preparation">
+            <details class="service-details" id="service-02">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 02</span><span class="price-chip">Fixed quote</span></div>
+                <h3>Data entry and structured data preparation</h3>
+                <p>Turn provided documents, notes, or records into a consistent reviewable table.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>2–5 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Provided records, fields, template, and sample</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Structured spreadsheet or CSV</li><li>Missing and ambiguous-item notes</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No guessing absent facts or regulated-data handling without an approved plan.</p>
+                <a class="service-cta" href="#quote" data-select-service="Data entry and structured data preparation">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="PDF, image, and document extraction">
+            <details class="service-details" id="service-03">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 03</span><span class="price-chip">From $125</span></div>
+                <h3>PDF, image, and document extraction</h3>
+                <p>Extract agreed fields, tables, or indexes from a confirmed document set.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>2–5 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>PDFs, images, field list, output columns</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>CSV or Excel extraction</li><li>Source references and ambiguity report</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No forensic authentication, legal interpretation, security bypass, or guaranteed OCR accuracy.</p>
+                <a class="service-cta" href="#quote" data-select-service="PDF, image, and document extraction">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="File and folder organization">
+            <details class="service-details" id="service-04">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 04</span><span class="price-chip">From $75</span></div>
+                <h3>File and folder organization</h3>
+                <p>Create consistent file names, folder structures, and a clear before-and-after map.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>1–4 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Working copy, directory list, naming rules</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Organized working-copy files</li><li>Naming convention and exception list</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No deletion of the only copy or private cloud-account access by default.</p>
+                <a class="service-cta" href="#quote" data-select-service="File and folder organization">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Website QA and public-page review">
+            <details class="service-details" id="service-05">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 05</span><span class="price-chip">From $95</span></div>
+                <h3>Website QA and public-page review</h3>
+                <p>Find visible copy, contact, navigation, form-state, and usability problems on public pages.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>2–4 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Public URL, priority pages, expected path</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Evidence-backed priority report</li><li>Reproduction steps and recommendations</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No penetration testing, admin access, publishing, or guaranteed traffic or conversion results.</p>
+                <a class="service-cta" href="#quote" data-select-service="Website QA and public-page review">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Inventory, SKU, and catalog cleanup">
+            <details class="service-details" id="service-06">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 06</span><span class="price-chip">From $95</span></div>
+                <h3>Inventory, SKU, and catalog cleanup</h3>
+                <p>Standardize product records and identify duplicates, collisions, missing fields, and invalid values.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>2–5 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Catalog export, SKU rules, target columns</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Normalized catalog file</li><li>Duplicate and exception reports</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No inventory buying, listing publication, fabricated product facts, or live marketplace changes.</p>
+                <a class="service-cta" href="#quote" data-select-service="Inventory, SKU, and catalog cleanup">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Lead research and list preparation">
+            <details class="service-details" id="service-07">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 07</span><span class="price-chip">From $125</span></div>
+                <h3>Lead research and list preparation</h3>
+                <p>Build a focused organization list from approved public sources with source URLs and verification state.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>3–7 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Criteria, fields, geography, count, exclusions</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Structured list with source URLs</li><li>Exclusions and unresolved-item notes</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No purchased scraped lists, access-control bypass, sensitive-data enrichment, outreach, or promised sales.</p>
+                <a class="service-cta" href="#quote" data-select-service="Lead research and list preparation">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="CRM cleanup and migration preparation">
+            <details class="service-details" id="service-08">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 08</span><span class="price-chip">Fixed milestone</span></div>
+                <h3>CRM cleanup and migration preparation</h3>
+                <p>Normalize exported contact and company records and prepare a controlled field map.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>3–10 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Exports, target template, field and merge rules</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Cleaned working-copy export</li><li>Duplicate report and field map</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No live CRM login, customer messaging, invented consent, or guaranteed third-party import.</p>
+                <a class="service-cta" href="#quote" data-select-service="CRM cleanup and migration preparation">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="SOPs, checklists, and workflow documentation">
+            <details class="service-details" id="service-09">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 09</span><span class="price-chip">From $125</span></div>
+                <h3>SOPs, checklists, and workflow documentation</h3>
+                <p>Turn an existing process into a practical operating guide with approvals, handoffs, and exceptions.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>2–5 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Notes, walkthrough, audience, exceptions</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>SOP, checklist, or workflow guide</li><li>Revision-ready source document</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No invented process, legal or regulatory certification, or unlimited revisions.</p>
+                <a class="service-cta" href="#quote" data-select-service="SOPs, checklists, and workflow documentation">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Research and competitor summaries">
+            <details class="service-details" id="service-10">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 10</span><span class="price-chip">Fixed-scope quote</span></div>
+                <h3>Research and competitor summaries</h3>
+                <p>Collect, compare, source, and compress approved public information around a bounded question.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>3–7 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Question, comparison set, fields, geography</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Source-backed summary</li><li>Comparison table, assumptions, and gaps</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No legal, investment, medical, or accounting advice and no fabricated market or customer claims.</p>
+                <a class="service-cta" href="#quote" data-select-service="Research and competitor summaries">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Reports, trackers, and lightweight dashboards">
+            <details class="service-details" id="service-11">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 11</span><span class="price-chip">Fixed-scope quote</span></div>
+                <h3>Reports, trackers, and lightweight dashboards</h3>
+                <p>Turn provided data into a reusable review surface for status, exceptions, and decisions.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>2–7 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Data sample, decisions, fields, update cadence</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Tracker, report, or file-based dashboard</li><li>Field guide and refresh notes</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No fake live telemetry, enterprise BI administration, unrestricted database access, or guaranteed forecasts.</p>
+                <a class="service-cta" href="#quote" data-select-service="Reports, trackers, and lightweight dashboards">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Small Python scripts and local automation">
+            <details class="service-details" id="service-12">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 12</span><span class="price-chip">From $150</span></div>
+                <h3>Small Python scripts and local automation</h3>
+                <p>Automate one deterministic local task such as renaming files, transforming CSVs, parsing text, or preparing reports.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>3–10 business days</dd></div>
+                  <div><dt>Inputs</dt><dd>Safe sample, exact rules, output example</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Source script and run instructions</li><li>Fixture validation, limits, and failure behavior</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No credential collection, destructive production changes, security bypass, autonomous publishing, buying, or messaging.</p>
+                <a class="service-cta" href="#quote" data-select-service="Small Python scripts and local automation">Request This Service</a>
+              </div>
+            </details>
+          </article>
+
+          <article class="service-card" data-service="Recurring administrative and data-operations support">
+            <details class="service-details" id="service-13">
+              <summary class="service-summary">
+                <div class="service-topline"><span class="service-number">SERVICE 13</span><span class="price-chip">From $400/month</span></div>
+                <h3>Recurring administrative and data-operations support</h3>
+                <p>Run an agreed weekly or monthly package for files, data, catalogs, research, QA, or reporting.</p>
+                <span class="detail-control-label">View Details</span>
+              </summary>
+              <div class="service-detail-body">
+                <dl class="service-meta">
+                  <div><dt>Plan</dt><dd>Cadence confirmed before first cycle</dd></div>
+                  <div><dt>Inputs</dt><dd>Recurring tasks, cadence, volume, approvals</dd></div>
+                </dl>
+                <h4>Deliverables</h4>
+                <ul class="compact-list"><li>Cycle-specific files or reports</li><li>Exception log and written handoff</li></ul>
+                <p class="boundary"><strong>Boundary:</strong> No unlimited tasks, account access by default, live commerce, automatic external actions, or unbounded on-call coverage.</p>
+                <a class="service-cta" href="#quote" data-select-service="Recurring administrative and data-operations support">Request This Service</a>
+              </div>
+            </details>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-line section-compact" id="samples" aria-labelledby="samples-title">
+      <div class="container">
+        <p class="eyebrow">Proof-safe work format examples</p>
+        <h2 id="samples-title">See the structure of a careful handoff</h2>
+        <p class="lede">
+          These compact examples show how inputs, findings, and operating steps can be organized.
+          They were created for this preview and are not evidence of completed client work.
+        </p>
+
+        <div class="proof-samples-grid">
+          <article class="proof-sample">
+            <span class="synthetic-label">Synthetic example - not client work</span>
+            <h3>Spreadsheet input before cleanup</h3>
+            <p>Intentional formatting differences demonstrate the kind of issues a cleanup scope can identify.</p>
+            <pre class="sample-code" aria-label="Synthetic spreadsheet input example">sku,product name,qty,unit price,status
+ ab-001 ,Desk Lamp,5,$19.99,Active
+AB001,desk lamp,5,19.99,active
+BX-20,Storage Bin,,12.50,ACTIVE
+cx_300,Monitor Stand,2,$34.00,</pre>
+          </article>
+
+          <article class="proof-sample">
+            <span class="synthetic-label">Synthetic example - not client work</span>
+            <h3>Spreadsheet output after stated rules</h3>
+            <p>This illustrative output uses consistent fields while preserving an unresolved value for review.</p>
+            <pre class="sample-code" aria-label="Synthetic spreadsheet output example">sku,product_name,quantity,unit_price,status
+AB-001,Desk Lamp,5,19.99,Active
+BX-020,Storage Bin,,12.50,Active
+CX-300,Monitor Stand,2,34.00,Review</pre>
+          </article>
+
+          <article class="proof-sample">
+            <span class="synthetic-label">Synthetic example - not client work</span>
+            <h3>Website QA finding format</h3>
+            <p>A reviewable finding connects priority, visible evidence, and a bounded recommendation.</p>
+            <ul class="sample-findings">
+              <li><strong>High:</strong> Use one quote CTA label and one target everywhere.</li>
+              <li><strong>Medium:</strong> Keep the mobile quote action visible when navigation expands.</li>
+              <li><strong>Medium:</strong> Explain that local preview controls do not transmit data.</li>
+            </ul>
+          </article>
+
+          <article class="proof-sample">
+            <span class="synthetic-label">Synthetic example - not client work</span>
+            <h3>Fixed-scope intake checklist</h3>
+            <p>An operating checklist keeps inputs, approvals, exceptions, and delivery visible.</p>
+            <ol class="sample-checklist">
+              <li>Receive a redacted sample or written problem description.</li>
+              <li>Record the intended output, volume, deadline, and exclusions.</li>
+              <li>Return written deliverables, fixed price, and planning range.</li>
+              <li>Begin only after written approval; document exceptions.</li>
+              <li>Deliver organized files, quality-check notes, and an issue summary.</li>
+            </ol>
+          </article>
+        </div>
+
+        <p class="sample-disclosure">
+          <strong>Ethical disclosure:</strong> All four samples above are synthetic demonstrations created for this local preview. They do not represent customers, testimonials, ratings, revenue, credentials, guaranteed outcomes, or completed client engagements.
+        </p>
+      </div>
+    </section>
+
+    <section class="section-line section-compact" id="process" aria-labelledby="process-title">
+      <div class="container">
+        <p class="eyebrow">Five written steps</p>
+        <h2 id="process-title">A buying process with no hidden steps</h2>
+        <p class="lede">
+          One written path keeps scope, approval, exceptions, and delivery visible from first brief to final handoff.
+        </p>
+
+        <ol class="process-grid">
+          <li><strong>Send a safe sample or describe the problem.</strong><span>Use one redacted file, a public URL, or a short written description.</span></li>
+          <li><strong>Receive exact deliverables, price, and turnaround.</strong><span>The quote identifies assumptions, exclusions, availability, and the review point.</span></li>
+          <li><strong>Approve the fixed scope.</strong><span>Work begins only after written approval.</span></li>
+          <li><strong>Work is completed and quality-checked.</strong><span>Exceptions and blocked items are documented instead of hidden.</span></li>
+          <li><strong>Receive organized files and an issue summary.</strong><span>The handoff identifies completed work, changes, and any decision still required.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section-line" id="standards" aria-labelledby="standards-title">
+      <div class="container">
+        <p class="eyebrow">Five service commitments</p>
+        <h2 id="standards-title">THE FIVE-STAR STANDARD WE AIM TO DELIVER</h2>
+        <p class="lede">These are our service standards, not customer reviews. Verified client feedback will be published only with permission.</p>
+
+        <div class="standards-grid">
+          <article class="standard-card" aria-label="Service commitment 1 of 5: Clear scope before work begins">
+            <span class="commitment-marker" aria-hidden="true">01</span>
+            <strong>Clear scope before work begins.</strong>
+            <p>Inputs, deliverables, fixed price, planning range, assumptions, exclusions, and review point stay written.</p>
+          </article>
+          <article class="standard-card" aria-label="Service commitment 2 of 5: Fast written communication and documented deliverables">
+            <span class="commitment-marker" aria-hidden="true">02</span>
+            <strong>Fast, written communication and documented deliverables.</strong>
+            <p>Questions, approvals, changes, blocked items, and delivery notes stay in one reviewable email path.</p>
+          </article>
+          <article class="standard-card" aria-label="Service commitment 3 of 5: Organized files and precise exception reporting">
+            <span class="commitment-marker" aria-hidden="true">03</span>
+            <strong>Organized files, precise exception reporting, and no hidden surprises.</strong>
+            <p>The handoff identifies completed work, exceptions, unresolved items, and client decisions.</p>
+          </article>
+          <article class="standard-card" aria-label="Service commitment 4 of 5: Fixed-price confirmation before work">
+            <span class="commitment-marker" aria-hidden="true">04</span>
+            <strong>Fixed-price confirmation before work starts.</strong>
+            <p>Material scope changes require a new written confirmation before work continues.</p>
+          </article>
+          <article class="standard-card" aria-label="Service commitment 5 of 5: Practical time-saving delivery">
+            <span class="commitment-marker" aria-hidden="true">05</span>
+            <strong>A final delivery designed to save the client time.</strong>
+            <p>The delivery includes the instructions, change summary, or issue notes promised in scope.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-line section-compact" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <p class="eyebrow">Starting guidance</p>
+        <h2 id="pricing-title">Know the starting point before you share a file</h2>
+        <p class="lede">
+          Source quality, volume, manual review, edge cases, and current availability are confirmed
+          before the fixed quote is approved.
+        </p>
+
+        <div class="table-shell" role="region" aria-label="Starting price guidance" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">Service</th><th scope="col">Starting guidance</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Spreadsheet or file cleanup</td><td>From $75</td></tr>
+              <tr><td>Website QA</td><td>From $95</td></tr>
+              <tr><td>Document extraction or indexing</td><td>From $125</td></tr>
+              <tr><td>SOP or workflow documentation</td><td>From $125</td></tr>
+              <tr><td>Small automation or script</td><td>From $150</td></tr>
+              <tr><td>Recurring data operations</td><td>From $400/month</td></tr>
+              <tr><td>Larger or mixed-scope work</td><td>Fixed milestone quote</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pricing-note">Starting guidance only. Final fixed price depends on scope, file condition, volume, complexity, and deadline.</p>
+      </div>
+    </section>
+
+    <section class="section-line" id="boundaries" aria-labelledby="boundaries-title">
+      <div class="container">
+        <p class="eyebrow">Operational boundaries</p>
+        <h2 id="boundaries-title">Clear limits protect the work</h2>
+
+        <div class="boundary-grid">
+          <article class="boundary-panel safe">
+            <h3>What SPARTAN can help with</h3>
+            <ul>
+              <li>Administrative and structured-data preparation</li>
+              <li>Document extraction and file organization</li>
+              <li>Public-page QA and source-backed research</li>
+              <li>Catalog cleanup, reporting, and workflow documentation</li>
+              <li>Bounded local scripts and recurring data operations</li>
+            </ul>
+          </article>
+          <article class="boundary-panel stop">
+            <h3>What SPARTAN will not do</h3>
+            <ul>
+              <li>Legal or accounting advice</li>
+              <li>Penetration testing or access-control bypass</li>
+              <li>Guaranteed business, ranking, revenue, or customer outcomes</li>
+              <li>Unrestricted system access or credential handling</li>
+              <li>Automatic publishing, purchasing, or customer messaging</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="privacy-notice">
+          <p><strong>Start with the minimum information needed.</strong></p>
           <p>
-            Send one sample and describe the result you need. You will receive a
-            written fixed-scope response before anything starts.
+            Use a public URL or redacted sample. Do not send passwords, MFA codes, full card
+            numbers, Social Security numbers, banking credentials, protected health information,
+            tax records, or private customer data. Do not send the only copy of an important file.
           </p>
-          <a
-            class="button button-solid button-large"
-            href="mailto:spartan337.ops@gmail.com?subject=Fixed-scope%20service%20request&amp;body=Hi%20Nicholas%2C%0A%0AI%20need%20help%20with%3A%0A%0AThe%20result%20I%20need%20is%3A%0A%0AI%20can%20share%20this%20public%20URL%20or%20redacted%20sample%3A%0A"
-          >
-            Email Nicholas
-            <span aria-hidden="true">↗</span>
-          </a>
-          <small>spartan337.ops@gmail.com</small>
+          <p>
+            The written quote identifies the approved working copy, access boundary, handling
+            method, and any retention or deletion requirement before sensitive work begins.
+          </p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <footer>
-        <div class="shell footer-inner">
-          <a class="brand brand-footer" href="#top">
-            <span class="brand-mark" aria-hidden="true">S</span>
-            <span>
-              <strong>SPARTAN</strong>
-              <small>OPS</small>
-            </span>
-          </a>
-          <p>Phoenix + Tempe, Arizona · Remote work available</p>
-          <p>Availability and turnaround confirmed per project.</p>
+    <section class="section-line section-compact" id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <p class="eyebrow">Frequently asked questions</p>
+        <h2 id="faq-title">Answers before you commit</h2>
+
+        <div class="faq-list">
+          <details>
+            <summary>What files are accepted?</summary>
+            <div class="faq-answer"><p>Common working formats include CSV, TSV, Excel, PDF, common image formats, text documents, and copied local file sets. Send one redacted sample first. The written quote confirms the exact format and batch.</p></div>
+          </details>
+          <details>
+            <summary>How long does work take?</summary>
+            <div class="faq-answer"><p>Each service includes a typical planning range. The written quote confirms the actual range after source quality, volume, edge cases, current availability, and review requirements are known. The range is an estimate, not a guarantee.</p></div>
+          </details>
+          <details>
+            <summary>How is confidentiality handled?</summary>
+            <div class="faq-answer"><p>Initial review should use a public URL or redacted sample. If private material is required later, the written scope identifies the approved working copy, handling boundary, permitted access, and any retention or deletion requirement before transfer.</p></div>
+          </details>
+          <details>
+            <summary>Are revisions included?</summary>
+            <div class="faq-answer"><p>The written quote identifies the review point and revision allowance. Corrections to the agreed deliverable are separated from new requirements. Material additions receive a new fixed-scope confirmation before work continues.</p></div>
+          </details>
+          <details>
+            <summary>When is payment requested?</summary>
+            <div class="faq-answer"><p>Payment timing is stated in the written quote. For small fixed-scope engagements, payment is normally requested after the agreed delivery is made available for review unless the quote states a different milestone.</p></div>
+          </details>
+          <details>
+            <summary>Can everything be handled in writing?</summary>
+            <div class="faq-answer"><p>Yes. Email is the default path for requests, scope, price, approvals, questions, changes, blocked items, and final handoff. Written communication is fully supported for people who prefer or need to avoid calls.</p></div>
+          </details>
+          <details>
+            <summary>Does SPARTAN provide legal or accounting advice?</summary>
+            <div class="faq-answer"><p>No. SPARTAN can organize provided information and prepare administrative files, but does not interpret law, provide legal advice, provide accounting advice, certify compliance, or make regulated professional decisions.</p></div>
+          </details>
+          <details>
+            <summary>How are larger projects scoped?</summary>
+            <div class="faq-answer"><p>Larger or mixed-service work is divided into fixed milestones. Each milestone identifies its inputs, deliverables, price, planning range, review point, and exclusions before approval.</p></div>
+          </details>
         </div>
-      </footer>
-    </main>
-  </body>
+      </div>
+    </section>
+
+    <section class="section-line" id="quote" aria-labelledby="quote-title">
+      <div class="container">
+        <div class="quote-heading">
+          <div>
+            <p class="eyebrow">Your next step / no call required</p>
+            <h2 id="quote-title">Turn the problem into a written scope</h2>
+            <p class="lede">
+              Describe the result you need. A public URL or redacted sample is enough for initial
+              review. This website does not upload your entries; it prepares an email draft in
+              your email app for you to review and send.
+            </p>
+          </div>
+          <a class="button" href="mailto:spartan337.ops@gmail.com?subject=Project%20Quote%20Request%20-%20SPARTAN%20Ops">Email a Quote Request</a>
+        </div>
+
+        <div class="quote-assurances" aria-label="Quote request assurances">
+          <div class="quote-assurance"><strong>Minimum safe input</strong><span>A short description is enough to begin.</span></div>
+          <div class="quote-assurance"><strong>Written buying decision</strong><span>Review price, deliverables, timing, and exclusions.</span></div>
+          <div class="quote-assurance"><strong>You control Send</strong><span>The site creates a draft; your email app sends only after you approve.</span></div>
+        </div>
+
+        <div class="quote-grid">
+          <form class="quote-form" id="quote-form" novalidate data-email-draft-only="true">
+            <p class="form-status" id="form-mode-note"><strong>No upload and no automatic send.</strong> Fields marked * are required. Your entries stay in this page until you choose to open an email draft.</p>
+            <div class="form-grid">
+              <div class="field">
+                <label for="name">Name <span class="required" aria-hidden="true">*</span></label>
+                <input id="name" name="name" type="text" autocomplete="name" maxlength="80" aria-describedby="name-help" required>
+                <span class="helper" id="name-help">Your name.</span>
+              </div>
+
+              <div class="field">
+                <label for="email">Reply email (optional)</label>
+                <input id="email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="email-help">
+                <span class="helper" id="email-help">Add this only if replies should go somewhere other than the sending account.</span>
+              </div>
+
+              <div class="field">
+                <label for="company">Company (optional)</label>
+                <input id="company" name="company" type="text" autocomplete="organization" maxlength="100" aria-describedby="company-help">
+                <span class="helper" id="company-help">Company, organization, or Independent.</span>
+              </div>
+
+              <div class="field">
+                <label for="service">Service needed <span class="required" aria-hidden="true">*</span></label>
+                <select id="service" name="service" aria-describedby="service-help" required>
+                  <option value="">Choose one service</option>
+                  <option>Spreadsheet and CSV cleanup</option>
+                  <option>Data entry and structured data preparation</option>
+                  <option>PDF, image, and document extraction</option>
+                  <option>File and folder organization</option>
+                  <option>Website QA and public-page review</option>
+                  <option>Inventory, SKU, and catalog cleanup</option>
+                  <option>Lead research and list preparation</option>
+                  <option>CRM cleanup and migration preparation</option>
+                  <option>SOPs, checklists, and workflow documentation</option>
+                  <option>Research and competitor summaries</option>
+                  <option>Reports, trackers, and lightweight dashboards</option>
+                  <option>Small Python scripts and local automation</option>
+                  <option>Recurring administrative and data-operations support</option>
+                </select>
+                <span class="helper" id="service-help">Choose the closest of the 13 service groups.</span>
+              </div>
+
+              <div class="field field-wide">
+                <label for="problem">Problem description <span class="required" aria-hidden="true">*</span></label>
+                <textarea id="problem" name="problem" maxlength="900" aria-describedby="problem-help" required></textarea>
+                <span class="helper" id="problem-help">Describe what is difficult now, the result needed, and what the final file or report should help you do. Maximum 900 characters.</span>
+              </div>
+
+              <div class="field">
+                <label for="deadline">Deadline (optional)</label>
+                <input id="deadline" name="deadline" type="date" aria-describedby="deadline-help">
+                <span class="helper" id="deadline-help">Requested date. The written quote confirms availability.</span>
+              </div>
+
+              <div class="field">
+                <label for="estimated-count">Approximate volume (optional)</label>
+                <input id="estimated-count" name="estimated-count" type="number" min="1" step="1" inputmode="numeric" aria-describedby="estimated-count-help">
+                <span class="helper" id="estimated-count-help">Files, documents, records, pages, rows, or SKUs.</span>
+              </div>
+
+              <fieldset class="field-wide" id="sample-group" aria-describedby="sample-help sample-error">
+                <legend>Sample file description or public URL (optional)</legend>
+                <div class="sample-grid">
+                  <div class="field">
+                    <label for="sample-reference">Redacted sample file description</label>
+                    <input id="sample-reference" name="sample-reference" type="text" maxlength="160" aria-describedby="sample-reference-help">
+                    <span class="helper" id="sample-reference-help">Describe the file and format only. This website does not accept uploads.</span>
+                  </div>
+                  <div class="field">
+                    <label for="public-url">Public URL</label>
+                    <input id="public-url" name="public-url" type="url" inputmode="url" maxlength="500" aria-describedby="sample-help sample-error">
+                    <span class="helper" id="sample-help">Optional. Use a publicly accessible URL instead of sharing private access.</span>
+                  </div>
+                </div>
+                <p class="error-text" id="sample-error" hidden>Enter a complete public URL or leave this field blank.</p>
+              </fieldset>
+
+              <div class="check-row field-wide">
+                <input id="privacy-confirmation" name="privacy-confirmation" type="checkbox" required>
+                <label for="privacy-confirmation">
+                  I confirm that this request does not contain passwords, MFA codes, full card numbers,
+                  Social Security numbers, banking credentials, protected health information, tax records,
+                  or private customer data.
+                </label>
+              </div>
+
+              <div class="field-wide">
+                <div class="form-actions">
+                  <a class="button" id="prepare-email" href="mailto:spartan337.ops@gmail.com?subject=Project%20Quote%20Request%20-%20SPARTAN%20Ops">Prepare My Quote Email</a>
+                  <button class="button button-secondary" type="reset">Clear Fields</button>
+                </div>
+                <div class="form-status" id="form-status" role="status" aria-live="polite">
+                  Nothing has been sent. Complete the required fields, then open and review the email draft before you press Send.
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <aside class="next-panel" aria-labelledby="next-title">
+            <p class="eyebrow">What happens next</p>
+            <h3 id="next-title">One written path from request to handoff</h3>
+            <ol class="next-list">
+              <li>Send a safe sample or describe the problem.</li>
+              <li>Receive exact deliverables, price, and turnaround.</li>
+              <li>Approve the fixed scope.</li>
+              <li>Work is completed and quality-checked.</li>
+              <li>Receive organized files and an issue summary.</li>
+            </ol>
+
+            <div class="email-fallback">
+              <strong>Written email path</strong>
+              <p>
+                Email <a href="mailto:spartan337.ops@gmail.com?subject=Project%20Quote%20Request%20-%20SPARTAN%20Ops">spartan337.ops@gmail.com</a>
+                with a short brief or public URL. <strong>Your email app opens a draft; review it and press Send yourself.</strong>
+                No call is required, and this website does not upload your entries.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-copy">
+        <strong>SPARTAN Ops</strong>
+        <p>Fixed-scope data and operations services with written deliverables, price, and boundaries before work begins.</p>
+        <p>Written communication by email is fully supported from first request through handoff.</p>
+        <p>No legal advice. No accounting advice. No credential requests during initial review. No guaranteed outcomes.</p>
+        <p>© 2026 SPARTAN Ops. Canonical website: <a href="https://spartan337ops.github.io/">spartan337ops.github.io</a>.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#home">Back to top</a>
+        <a href="#boundaries">Privacy and service boundaries</a>
+        <a href="#faq">Scope and service terms</a>
+        <a href="mailto:spartan337.ops@gmail.com?subject=Project%20Quote%20Request%20-%20SPARTAN%20Ops">Email SPARTAN Ops</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const form = document.getElementById("quote-form");
+      const status = document.getElementById("form-status");
+      const modeBanner = document.getElementById("site-mode-banner");
+      const serviceSelect = document.getElementById("service");
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const companyInput = document.getElementById("company");
+      const problemInput = document.getElementById("problem");
+      const deadlineInput = document.getElementById("deadline");
+      const estimatedCountInput = document.getElementById("estimated-count");
+      const sampleReference = document.getElementById("sample-reference");
+      const publicUrl = document.getElementById("public-url");
+      const privacyConfirmation = document.getElementById("privacy-confirmation");
+      const sampleGroup = document.getElementById("sample-group");
+      const sampleError = document.getElementById("sample-error");
+      const prepareEmail = document.getElementById("prepare-email");
+      const navMenu = document.querySelector(".nav-menu");
+      const navToggle = document.querySelector(".nav-toggle");
+      const requiredControls = Array.from(form.querySelectorAll("[required]"));
+      const formatControls = [emailInput, deadlineInput, estimatedCountInput, publicUrl];
+      const localHosts = new Set(["", "localhost", "127.0.0.1", "[::1]"]);
+      const isLocalPreview = localHosts.has(window.location.hostname);
+
+      if (!isLocalPreview) {
+        modeBanner.textContent = "FIXED SCOPE | WRITTEN QUOTE | NO CALL REQUIRED";
+        modeBanner.setAttribute("aria-label", "Service buying safeguards");
+      }
+
+      navMenu.addEventListener("toggle", () => {
+        navToggle.setAttribute("aria-expanded", String(navMenu.open));
+      });
+
+      navMenu.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && navMenu.open) {
+          navMenu.open = false;
+          navToggle.focus();
+        }
+      });
+
+      navMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.matchMedia("(max-width: 719px)").matches) {
+            navMenu.open = false;
+          }
+        });
+      });
+
+      const valueOr = (control, fallback = "Not provided") => {
+        const value = control.value.trim();
+        return value || fallback;
+      };
+
+      const buildMailtoHref = () => {
+        const subject = `Project Quote Request - ${valueOr(serviceSelect, "General request")} - SPARTAN Ops`;
+        const lines = [
+          "Hello SPARTAN Ops,",
+          "",
+          "I would like a written scope and fixed-price quote.",
+          "",
+          `Name: ${valueOr(nameInput)}`,
+          `Reply email: ${valueOr(emailInput, "Use the sending email address")}`,
+          `Company: ${valueOr(companyInput)}`,
+          `Service: ${valueOr(serviceSelect)}`,
+          `Problem and desired result: ${valueOr(problemInput)}`,
+          `Requested deadline: ${valueOr(deadlineInput)}`,
+          `Approximate volume: ${valueOr(estimatedCountInput)}`,
+          `Sample or file description: ${valueOr(sampleReference)}`,
+          `Public URL: ${valueOr(publicUrl)}`,
+          "",
+          "Sensitive-data confirmation: I have not included passwords, MFA codes, full card numbers, Social Security numbers, banking credentials, protected health information, tax records, or private customer data.",
+          "Source: SPARTAN Ops website guided request",
+        ];
+        return `mailto:spartan337.ops@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
+      };
+
+      const updateEmailDraft = () => {
+        prepareEmail.href = buildMailtoHref();
+      };
+
+      document.querySelectorAll("[data-select-service]").forEach((link) => {
+        link.addEventListener("click", () => {
+          const serviceName = link.getAttribute("data-select-service");
+          if (serviceName) {
+            serviceSelect.value = serviceName;
+            updateEmailDraft();
+          }
+        });
+      });
+
+      const clearValidation = () => {
+        [...requiredControls, ...formatControls].forEach((control) => control.removeAttribute("aria-invalid"));
+        sampleGroup.removeAttribute("aria-invalid");
+        sampleError.hidden = true;
+      };
+
+      const validateRequest = () => {
+        clearValidation();
+        const invalid = [];
+
+        requiredControls.forEach((control) => {
+          const empty = control.type === "checkbox" ? !control.checked : !control.value.trim();
+          const formatInvalid = !empty && typeof control.checkValidity === "function" && !control.checkValidity();
+          if (empty || formatInvalid) {
+            control.setAttribute("aria-invalid", "true");
+            invalid.push(control);
+          }
+        });
+
+        formatControls.forEach((control) => {
+          if (control.value.trim() && !control.checkValidity()) {
+            control.setAttribute("aria-invalid", "true");
+            if (control === publicUrl) {
+              sampleGroup.setAttribute("aria-invalid", "true");
+              sampleError.hidden = false;
+            }
+            if (!invalid.includes(control)) {
+              invalid.push(control);
+            }
+          }
+        });
+
+        if (invalid.length > 0) {
+          status.className = "form-status error";
+          status.textContent = "Review the highlighted fields. Nothing was sent.";
+          invalid[0].focus();
+          return false;
+        }
+
+        status.className = "form-status complete";
+        status.textContent = "Request is complete. Open the email draft, review every detail, and press Send yourself.";
+        return true;
+      };
+
+      prepareEmail.addEventListener("click", (event) => {
+        updateEmailDraft();
+        if (!validateRequest()) {
+          event.preventDefault();
+          return;
+        }
+        status.className = "form-status complete";
+        status.textContent = "Your email app is opening a draft. Nothing was sent by this website.";
+      });
+
+      form.addEventListener("input", updateEmailDraft);
+      form.addEventListener("change", updateEmailDraft);
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        status.className = "form-status";
+        status.textContent = "Use Prepare My Quote Email. You review the draft and press Send in your email app.";
+        prepareEmail.focus();
+      });
+
+      form.addEventListener("reset", () => {
+        window.setTimeout(() => {
+          clearValidation();
+          updateEmailDraft();
+          status.className = "form-status";
+          status.textContent = "Nothing has been sent. Complete the required fields, then open and review the email draft before you press Send.";
+        }, 0);
+      });
+
+      updateEmailDraft();
+    })();
+  </script>
+</body>
 </html>
